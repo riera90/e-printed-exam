@@ -183,15 +183,15 @@ void PainterDrawFilledCircle(struct Painting* painting, int x, int y, int radius
 }
 
 
-/*void PainterDrawCharAt(struct Painting* painting, int x, int y, char ascii_char, sFONT* font, int colored) {
+void PainterDrawCharAt(struct Painting* painting, int x, int y, char ascii_char, struct sFONT* font, int colored) {
     int i, j;
     unsigned int char_offset = (ascii_char - ' ') * font->Height * (font->Width / 8 + (font->Width % 8 ? 1 : 0));
     const unsigned char* ptr = &font->table[char_offset];
 
     for (j = 0; j < font->Height; j++) {
         for (i = 0; i < font->Width; i++) {
-            if (pgm_read_byte(ptr) & (0x80 >> (i % 8))) {
-                DrawPixel(x + i, y + j, colored);
+            if ((*ptr) & (0x80 >> (i % 8))) {
+                PainterDrawPixel(painting, x + i, y + j, colored);
             }
             if (i % 8 == 7) {
                 ptr++;
@@ -202,7 +202,7 @@ void PainterDrawFilledCircle(struct Painting* painting, int x, int y, int radius
         }
     }
 }
-void PainterDrawStringAt(struct Painting* painting, int x, int y, const char* text, sFONT* font, int colored) {
+void PainterDrawStringAt(struct Painting* painting, int x, int y, const char* text, struct sFONT* font, int colored) {
     const char* p_text = text;
     unsigned int counter = 0;
     int refcolumn = x;
@@ -210,11 +210,11 @@ void PainterDrawStringAt(struct Painting* painting, int x, int y, const char* te
     // Send the string character by character on EPD
     while (*p_text != 0) {
         // Display one character on EPD
-        DrawCharAt(refcolumn, y, *p_text, font, colored);
+        PainterDrawCharAt(painting, refcolumn, y, *p_text, font, colored);
         // Decrement the column position by 16
         refcolumn += font->Width;
         // Point on the next character
         p_text++;
         counter++;
     }
-}*/
+}

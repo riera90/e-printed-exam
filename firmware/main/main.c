@@ -33,20 +33,33 @@ void app_main()
     struct Painting image;
     image.data = data_;
     image.inv = 1;
+    image.h = 28;
+    image.w = 400;
+
+    edp4in2bV2ClearFrame();
+    //edp4in2bV2DisplayFrame();
+
+    PainterClear(&image, UNCOLORED);
+    PainterDrawStringAt(&image, 0, 0, "e-Paper Demo", &Font24, COLORED);
+    edp4in2bV2SetPartialWindowBlack(image.data, 100, 40, image.w, image.h);
+
+    PainterClear(&image, COLORED);
+    PainterDrawStringAt(&image, 40, 2, "riera90 0x4455434b", &Font24, UNCOLORED);
+    edp4in2bV2SetPartialWindowRed(image.data, 0, 64, image.w, image.h);
+
     image.h = 64;
     image.w = 64;
 
-    edp4in2bV2ClearFrame();
-    edp4in2bV2DisplayFrame();
-
     PainterClear(&image, UNCOLORED);
     PainterDrawRectangle(&image, 0, 0, 40, 50, COLORED);
-    PainterDrawLine(&image, 0, 0, 40, 50, UNCOLORED);
-    PainterDrawLine(&image, 40, 0, 0, 50, UNCOLORED);
+    PainterDrawLine(&image, 0, 0, 40, 50, COLORED);
+    PainterDrawLine(&image, 40, 0, 0, 50, COLORED);
     edp4in2bV2SetPartialWindowRed(image.data, 72, 120, image.w, image.h);
 
     PainterClear(&image, UNCOLORED);
     PainterDrawCircle(&image, 32, 32, 30, COLORED);
+    PainterDrawLine(&image, 11, 11, 55, 54, COLORED);
+    PainterDrawLine(&image, 11, 54, 54, 11, COLORED);
     edp4in2bV2SetPartialWindowBlack(image.data, 200, 120, image.w, image.h);
 
     PainterClear(&image, UNCOLORED);
