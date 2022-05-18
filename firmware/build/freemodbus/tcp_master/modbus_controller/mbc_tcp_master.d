@@ -2,7 +2,7 @@ tcp_master/modbus_controller/mbc_tcp_master.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/tcp_master/modbus_controller/mbc_tcp_master.c \
  /opt/esp/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/time.h \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h \
@@ -79,7 +79,7 @@ tcp_master/modbus_controller/mbc_tcp_master.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h:
 

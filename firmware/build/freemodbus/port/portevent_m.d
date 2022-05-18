@@ -2,7 +2,7 @@ port/portevent_m.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/port/portevent_m.c \
  /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/modbus/include/mb_m.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/modbus/include/mbconfig.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/port/port.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h \
@@ -52,7 +52,7 @@ port/portevent_m.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/modbus/include/mbconfig.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/freemodbus/port/port.h:
 

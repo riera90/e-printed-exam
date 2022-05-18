@@ -1,6 +1,6 @@
 src/select.o: /opt/esp/ESP8266_RTOS_SDK/components/newlib/src/select.c \
  /opt/esp/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/select.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/vfs/include/esp_vfs.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h \
@@ -38,7 +38,7 @@ src/select.o: /opt/esp/ESP8266_RTOS_SDK/components/newlib/src/select.c \
 
 /opt/esp/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/select.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/vfs/include/esp_vfs.h:
 

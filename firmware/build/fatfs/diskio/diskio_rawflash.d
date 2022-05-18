@@ -4,7 +4,7 @@ diskio/diskio_rawflash.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/fatfs/src/diskio.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/fatfs/src/ffconf.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
@@ -52,7 +52,7 @@ diskio/diskio_rawflash.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/fatfs/src/ffconf.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h:
 

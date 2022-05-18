@@ -1,14 +1,15 @@
-main.o: /home/diego/code/e-printed-exam/main/main.cpp \
- /home/diego/code/e-printed-exam/components/EPD4in2b_v2/EPD4in2b_v2.hpp \
- /home/diego/code/e-printed-exam/components/EDPif/EPDif.hpp \
+main.o: /home/diego/code/e-printed-exam/firmware/main/main.c \
+ /home/diego/code/e-printed-exam/firmware/components/EPD4in2b_v2/EPD4in2b_v2.h \
+ /home/diego/code/e-printed-exam/firmware/components/EDPif/EPDif.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/pin_mux_register.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/gpio_register.h \
+ /home/diego/code/e-printed-exam/firmware/components/painter/painter.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
@@ -43,9 +44,9 @@ main.o: /home/diego/code/e-printed-exam/main/main.cpp \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log_internal.h
 
-/home/diego/code/e-printed-exam/components/EPD4in2b_v2/EPD4in2b_v2.hpp:
+/home/diego/code/e-printed-exam/firmware/components/EPD4in2b_v2/EPD4in2b_v2.h:
 
-/home/diego/code/e-printed-exam/components/EDPif/EPDif.hpp:
+/home/diego/code/e-printed-exam/firmware/components/EDPif/EPDif.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h:
 
@@ -53,7 +54,7 @@ main.o: /home/diego/code/e-printed-exam/main/main.cpp \
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h:
 
@@ -62,6 +63,8 @@ main.o: /home/diego/code/e-printed-exam/main/main.cpp \
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/gpio_register.h:
+
+/home/diego/code/e-printed-exam/firmware/components/painter/painter.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/freertos/include/freertos/FreeRTOS.h:
 
@@ -128,4 +131,4 @@ main.o: /home/diego/code/e-printed-exam/main/main.cpp \
 /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log_internal.h:
-/home/diego/code/e-printed-exam/main/./main.cpp:
+/home/diego/code/e-printed-exam/firmware/main/./main.c:

@@ -1,6 +1,6 @@
 src/bootloader_init.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/bootloader_support/src/bootloader_init.c \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
@@ -20,7 +20,7 @@ src/bootloader_init.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/pin_mux_register.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/rom_functions.h
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h:
 

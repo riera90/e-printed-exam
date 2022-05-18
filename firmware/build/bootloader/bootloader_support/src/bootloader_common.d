@@ -1,6 +1,6 @@
 src/bootloader_common.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/bootloader_support/src/bootloader_common.c \
- /home/diego/code/e-printed-exam/build/bootloader/../include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/bootloader/../include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/xtensa/hal.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h \
@@ -18,7 +18,7 @@ src/bootloader_common.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/bootloader_support/include/bootloader_common.h \
  /opt/esp/ESP8266_RTOS_SDK/components/bootloader_support/include/esp_flash_data_types.h
 
-/home/diego/code/e-printed-exam/build/bootloader/../include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/bootloader/../include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/xtensa/hal.h:
 

@@ -4,7 +4,7 @@ src/spi_flash.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/spi_register.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/pin_mux_register.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
@@ -29,7 +29,7 @@ src/spi_flash.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h:
 

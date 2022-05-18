@@ -7,4 +7,4 @@ PROJECT_NAME := e_printed_exam
 
 include $(IDF_PATH)/make/project.mk
 
-EXTRA_COMPONENT_DIRS := components
+#EXTRA_COMPONENT_DIRS := components

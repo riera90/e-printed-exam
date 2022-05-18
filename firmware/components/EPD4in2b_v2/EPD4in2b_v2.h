@@ -1,7 +1,7 @@
 #ifndef EPD4IN2_V2_H
 #define EPD4IN2_V2_H
 
-#include "EPDif.hpp"
+#include "EPDif.h"
 
 // Display resolution
 #define EPD_WIDTH  400
@@ -49,33 +49,21 @@
 
 
 
+#define WIDTH 400
+#define HEIGHT 300
 
+int  edp4in2bV2Init(void);
+void edp4in2bV2SendCommand(uint32_t command);
+void edp4in2bV2SendData(uint32_t data);
+void edp4in2bV2WaitUntilIdle(void);
+void edp4in2bV2Reset(void);
+void edp4in2bV2SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
+void edp4in2bV2SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
+void edp4in2bV2SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
+void edp4in2bV2DisplayFramePart(const unsigned char* frame_black, const unsigned char* frame_red);
+void edp4in2bV2DisplayFrame(void);
+void edp4in2bV2ClearFrame(void);
+void edp4in2bV2Sleep(void);
 
-class Epd : EpdIf {
-public:
-    unsigned int width;
-    unsigned int height;
-
-    Epd();
-    ~Epd();
-    int  Init(void);
-    void SendCommand(unsigned char command);
-    void SendData(unsigned char data);
-    void WaitUntilIdle(void);
-    void Reset(void);
-    void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
-    void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
-    void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
-    void DisplayFrame(const unsigned char* frame_black, const unsigned char* frame_red);
-    void DisplayFrame(void);
-    void ClearFrame(void);
-    void Sleep(void);
-
-private:
-    int reset_pin;
-    int dc_pin;
-    int cs_pin;
-    int busy_pin;
-};
 
 #endif

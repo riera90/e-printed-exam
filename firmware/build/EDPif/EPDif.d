@@ -1,9 +1,10 @@
-EPDif.o: /home/diego/code/e-printed-exam/components/EDPif/EPDif.cpp \
- /home/diego/code/e-printed-exam/components/EDPif/EPDif.hpp \
+EPDif.o: \
+ /home/diego/code/e-printed-exam/firmware/components/EDPif/EPDif.c \
+ /home/diego/code/e-printed-exam/firmware/components/EDPif/EPDif.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/pin_mux_register.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
@@ -43,7 +44,7 @@ EPDif.o: /home/diego/code/e-printed-exam/components/EDPif/EPDif.cpp \
  /opt/esp/ESP8266_RTOS_SDK/components/spi_flash/include/esp_spi_flash.h \
  /opt/esp/ESP8266_RTOS_SDK/components/spi_flash/include/spi_flash.h
 
-/home/diego/code/e-printed-exam/components/EDPif/EPDif.hpp:
+/home/diego/code/e-printed-exam/firmware/components/EDPif/EPDif.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/gpio.h:
 
@@ -51,7 +52,7 @@ EPDif.o: /home/diego/code/e-printed-exam/components/EDPif/EPDif.cpp \
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h:
 
@@ -128,4 +129,4 @@ EPDif.o: /home/diego/code/e-printed-exam/components/EDPif/EPDif.cpp \
 /opt/esp/ESP8266_RTOS_SDK/components/spi_flash/include/esp_spi_flash.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/spi_flash/include/spi_flash.h:
-/home/diego/code/e-printed-exam/components/EDPif/./EPDif.cpp:
+/home/diego/code/e-printed-exam/firmware/components/EDPif/./EPDif.c:

@@ -3,7 +3,7 @@ tcp_slave/port/port_tcp_slave.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_err.h \
  /opt/esp/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/time.h \
  /opt/esp/ESP8266_RTOS_SDK/components/tcpip_adapter/include/esp_netif.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp_wifi_types.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp_interface.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_event/include/esp_event_base.h \
@@ -97,7 +97,7 @@ tcp_slave/port/port_tcp_slave.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/tcpip_adapter/include/esp_netif.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp_wifi_types.h:
 

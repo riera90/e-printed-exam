@@ -12,7 +12,7 @@ library/ssl_lib.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/internal/ssl_cert.h \
  /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/internal/ssl_dbg.h \
  /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/platform/ssl_opt.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/platform/ssl_port.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp_types.h \
  /opt/esp/ESP8266_RTOS_SDK/components/log/include/esp_log.h \
@@ -46,7 +46,7 @@ library/ssl_lib.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/platform/ssl_opt.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/openssl/include/platform/ssl_port.h:
 

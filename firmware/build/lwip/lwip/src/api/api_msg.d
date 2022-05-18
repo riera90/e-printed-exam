@@ -6,7 +6,7 @@ lwip/src/api/api_msg.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/newlib/platform_include/sys/time.h \
  /opt/esp/ESP8266_RTOS_SDK/components/vfs/include/sys/ioctl.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_task.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
@@ -100,7 +100,7 @@ lwip/src/api/api_msg.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp_common/include/esp_task.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/freertos/port/esp8266/include/freertos/FreeRTOSConfig.h:
 

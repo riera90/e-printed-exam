@@ -2,7 +2,7 @@ src/wps/wps_enrollee.o: \
  /opt/esp/ESP8266_RTOS_SDK/components/wpa_supplicant/src/wps/wps_enrollee.c \
  /opt/esp/ESP8266_RTOS_SDK/components/wpa_supplicant/src/utils/includes.h \
  /opt/esp/ESP8266_RTOS_SDK/components/wpa_supplicant/port/include/supplicant_opt.h \
- /home/diego/code/e-printed-exam/build/include/sdkconfig.h \
+ /home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/esp8266/eagle_soc.h \
  /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/driver/soc.h \
@@ -41,7 +41,7 @@ src/wps/wps_enrollee.o: \
 
 /opt/esp/ESP8266_RTOS_SDK/components/wpa_supplicant/port/include/supplicant_opt.h:
 
-/home/diego/code/e-printed-exam/build/include/sdkconfig.h:
+/home/diego/code/e-printed-exam/firmware/build/include/sdkconfig.h:
 
 /opt/esp/ESP8266_RTOS_SDK/components/esp8266/include/rom/ets_sys.h:
 
