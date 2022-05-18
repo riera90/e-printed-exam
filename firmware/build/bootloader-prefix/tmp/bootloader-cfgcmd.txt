@@ -1,1 +1,0 @@
-cmd='/usr/bin/cmake;-DSDKCONFIG=/home/diego/code/e-printed-exam/sdkconfig;-DIDF_PATH=/opt/esp/ESP8266_RTOS_SDK;-DIDF_TARGET=esp8266;-DPYTHON_DEPS_CHECKED=1;-DEXTRA_COMPONENT_DIRS=/opt/esp/ESP8266_RTOS_SDK/components/bootloader;-DLEGACY_INCLUDE_COMMON_HEADERS=;-GUnix Makefiles;<SOURCE_DIR><SOURCE_SUBDIR>'
