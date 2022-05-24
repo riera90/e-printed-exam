@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Aulas</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <a href=/classroom/create>
+                <button type="button" class="btn btn-primary mb-3">Agregar Nueva Aula</button>
+            </a>
+            <ul class="list-group">
+                {% for classroom in classrooms %}
+                    <a href="/classroom/{{ classroom.code }}" class="list-group-item d-flex justify-content-between align-items-center">
+                        ({{ classroom.code }}) {{ classroom.name }}
+                        <div class="flex-row">
+                            <span class="badge bg-primary rounded-pill">{% if classroom.devices.count == 0 %}no hay dispositivos{% endif %}{% if classroom.devices.count == 1 %}1 dispositivo{% endif %}{% if classroom.devices.count > 1 %}{{ classroom.devices.count }} dispositivos{% endif %}</span>
+                            <span class="badge bg-secondary rounded-pill">test2</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}

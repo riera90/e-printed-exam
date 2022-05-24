@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+      <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/classroom">Aulas</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ classroom.name }}</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <form method="get">
+                <fieldset disabled>
+                      <div class="mb-3">
+                          <label for="code">Código del aula</label>
+                          <input class="form-control" id="code" name="code" placeholder="Código del aula" value="{{ classroom.code }}">
+                      </div>
+                      <div class="mb-3">
+                          <label for="name">Nombre del aula</label>
+                          <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ classroom.name }}">
+                      </div>
+                </fieldset>
+            </form>
+            <a class="btn btn-primary" href=/classroom/{{ classroom.code }}/update role="button">Modificar</a>
+            <a class="btn btn-danger" href=/classroom/{{ classroom.code }}/delete role="button">Borrar</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

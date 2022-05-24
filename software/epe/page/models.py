@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class Page(models.Model):
+    document = models.ForeignKey('document.Document', related_name='pages', on_delete=models.CASCADE)
+    order = models.IntegerField()

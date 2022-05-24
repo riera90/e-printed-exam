@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+class Device(models.Model):
+    def __str__(self):
+        return self.uuid
+
+    uuid = models.CharField(max_length=1024, primary_key=True)
+    token = models.CharField(max_length=1024)
+    classroom = models.ForeignKey('classroom.Classroom', related_name='devices', on_delete=models.DO_NOTHING)
