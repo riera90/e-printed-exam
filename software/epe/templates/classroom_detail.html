@@ -12,20 +12,43 @@
             {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
             {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
             {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
-            <form method="get">
-                <fieldset disabled>
-                      <div class="mb-3">
-                          <label for="code">Código del aula</label>
-                          <input class="form-control" id="code" name="code" placeholder="Código del aula" value="{{ classroom.code }}">
-                      </div>
-                      <div class="mb-3">
-                          <label for="name">Nombre del aula</label>
-                          <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ classroom.name }}">
-                      </div>
-                </fieldset>
-            </form>
-            <a class="btn btn-primary" href=/classroom/{{ classroom.code }}/update role="button">Modificar</a>
-            <a class="btn btn-danger" href=/classroom/{{ classroom.code }}/delete role="button">Borrar</a>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Código del aula</div>
+                  {{ classroom.code }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Nombre del aula</div>
+                  {{ classroom.name }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <a class="btn btn-primary m-2" href=/classroom/{{ classroom.code }}/update role="button">Modificar</a>
+                  <a class="btn btn-danger m-2" href=/classroom/{{ classroom.code }}/delete role="button">Borrar</a>
+                </div>
+              </li>
+            </ul>
+
+            <div>
+                <span class="h1 m-3">Dispositivos</span>
+                <a href=/device/create>
+                    <button type="button" class="btn btn-primary mb-3">Agregar Nuevo Dispositivo</button>
+                </a>
+                <ul class="list-group">
+                    {% for device in devices %}
+                        <a href="/device/{{ device.uuid }}" class="list-group-item d-flex justify-content-between align-items-center">
+                            ({{ device.uuid }}) {{ device.name }}
+                            <div class="flex-row">
+                                <span class="badge bg-primary rounded-pill">{{ device.classroom.name }}</span>
+                                <span class="badge bg-secondary rounded-pill">test2</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </section>

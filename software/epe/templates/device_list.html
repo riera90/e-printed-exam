@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dispositivos</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <a href=/device/create>
+                <button type="button" class="btn btn-primary mb-3">Agregar Nuevo Dispositivo</button>
+            </a>
+            <ul class="list-group">
+                {% for device in devices %}
+                    <a href="/device/{{ device.uuid }}" class="list-group-item d-flex justify-content-between align-items-center">
+                        ({{ device.uuid }}) {{ device.name }}
+                        <div class="flex-row">
+                            <span class="badge bg-primary rounded-pill">{{ device.classroom.name }}</span>
+                            <span class="badge bg-secondary rounded-pill">test2</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}

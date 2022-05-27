@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/device">Dispositivos</a></li>
+                <li class="breadcrumb-item"><a href="/device/{{ device.uuid }}">{{ device.uuid }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Modificar</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group mb-3">
+                  <label for="uuid">Identificador del dispositivo</label>
+                  <input class="form-control" disabled id="uuid" name=uuid" placeholder="Identificador del dispositivo" value="{{ device.uuid }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="name">Nombre del dispositivo</label>
+                  <input class="form-control" id="name" name="name" placeholder="Nombre del dispositivo" value="{{ device.name }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="classroom">Aula asignada</label>
+                  <select class="form-select" id="classroom" name="classroom" aria-label="Aula asignada" value="{{ device.classroom.code }}">
+                    {% for clasroom in classrooms %}
+                      <option {% if clasroom.code == device.classroom.code %}selected{% endif %} value="{{ classroom.code }}">{{ clasroom.name }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

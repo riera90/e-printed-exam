@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+      <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/device">Dispositivos</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ device.uuid }}</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Identificador del dispositivo</div>
+                  {{ device.uuid }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start"{{ device.name }}">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Nombre del dispositivo</div>
+                  {{ device.name }}
+                </div>
+              </li>
+              <a class="list-group-item d-flex justify-content-between align-items-start" href="/classroom/{{ device.classroom.code }}">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Aula Asignada</div>
+                  {{ device.classroom.name }}
+                </div>
+                <span class="badge bg-primary rounded-pill">{{ device.classroom.devices.count }} dispositivo{% if device.classroom.devices.count != 1 %}s{% endif %} en esta aula</span>
+              </a>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <a class="btn btn-primary m-2" href=/device/{{ device.uuid }}/update role="button">Modificar</a>
+                  <a class="btn btn-danger m-2" href=/device/{{ device.uuid }}/delete role="button">Borrar</a>
+                </div>
+              </li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
