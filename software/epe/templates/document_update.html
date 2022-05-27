@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/document">Documentos</a></li>
+                <li class="breadcrumb-item"><a href="/document/{{ document.id }}">{{ document.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Modificar</li>
+              </ol>
+            </nav>
+            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
+            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
+            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group mb-3">
+                  <label for="name">Nombre del documento</label>
+                  <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ document.name }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="description">Descripción del documento</label>
+                  <input class="form-control" id="description" name="description" placeholder="Descripción del documento" value="{{ document.description }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="subject_code">Código de la asugnatura</label>
+                  <input class="form-control" id="subject_code" name="subject_code" placeholder="Código de la signatura" value="{{ document.subject_code }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="start">Comienzo de la clase</label>
+                  <input class="form-control" id="start" name="start" placeholder="Comienzo de la clase" value="{{ document.start }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="end">Finalización de la clase</label>
+                  <input class="form-control" id="end" name="end" placeholder="Finalización de la clase" value="{{ document.end }}">
+              </div>
+              <div class="form-group mb-3">
+                  <label for="classroom">Aula</label>
+                  <input class="form-control" id="classroom" name="classroom" placeholder="Aula" value="{{ document.classroom }}">
+              </div>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

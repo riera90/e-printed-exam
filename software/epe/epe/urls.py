@@ -24,4 +24,5 @@ urlpatterns = [
     path('login/', login_handler),
     path('logout/', logout_handler),
     path('classroom/', include('classroom.urls')),
+    path('document/', include('document.urls')),
 ]
