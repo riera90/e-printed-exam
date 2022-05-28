@@ -11,16 +11,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/classroom">Aulas</a>
+          <a class="nav-link {% if selected == "classroom" %}active{% endif %}" aria-current="page" href="/classroom">Aulas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/device">Dispositivos</a>
+          <a class="nav-link {% if selected == "device" %}active{% endif %}" aria-current="page" href="/device">Dispositivos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/document">Documentos</a>
+          <a class="nav-link {% if selected == "document" %}active{% endif %}" href="/document">Documentos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/logout">Cerrar sesión</a>
+          <a class="nav-link " aria-current="page" href="/logout">Cerrar sesión</a>
         </li>
       </ul>
     </div>

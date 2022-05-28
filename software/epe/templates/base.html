@@ -9,7 +9,6 @@
     <link rel="icon" href="{% static "media/favicon.png" %}" sizes="32x32" />
     <link rel="icon" href="{% static "media/favicon.png" %}" sizes="192x192" />
     <link rel="apple-touch-icon" href="{% static "media/favicon.png" %}"/>
-    <title>{% block title %}E-printed{% endblock %}</title>
     {% block extra_header %}{% endblock %}
 </head>
 <body>
@@ -17,6 +16,7 @@
     {% block content %}{% endblock %}
     {% block footer %}{% include "footer.html" %}{% endblock %}
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    {% block script %}{% endblock %}
 </body>
 </html>

@@ -2,7 +2,7 @@ from datetime import time
 import random
 
 from django.contrib.auth.hashers import make_password
-
+from django.utils.timezone import datetime
 
 
 print('Generating dummy data')
@@ -38,3 +38,14 @@ dev2.save()
 dev3.save()
 dev4.save()
 
+'''CREACIÓN DE DOCUMENTOS'''
+from document.models import Document
+print('Generating Document Entities')
+doc1=Document(name="DOCUMENT 1", description="Descripción del documento 1", subject_code="SUBJ001", classroom=atc1, start=datetime.now(), end=datetime.now())
+doc2=Document(name="DOCUMENT 2", description="Descripción del documento 2", subject_code="SUBJ002", classroom=atc1, start=datetime.now(), end=datetime.now())
+doc3=Document(name="DOCUMENT 3", description="Descripción del documento 3", subject_code="SUBJ003", classroom=atc2, start=datetime.now(), end=datetime.now())
+doc4=Document(name="DOCUMENT 4", description="Descripción del documento 4", subject_code="SUBJ004", classroom=atc2, start=datetime.now(), end=datetime.now())
+doc1.save()
+doc2.save()
+doc3.save()
+doc4.save()

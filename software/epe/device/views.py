@@ -31,10 +31,15 @@ def update(request, id):
     device = Device.objects.get(uuid=id)
     classrooms = Classroom.objects.all()
     if request.POST:
+        print(request.POST)
         name = request.POST['name']
+        classroom_id = request.POST['classroom']
         if not name:
             return render(request, 'device_update.html', {'device': device, 'classrooms': classrooms, 'error': "Nombre del dispositivo no introducido"})
+        if not classroom_id or not Classroom.objects.filter(code=classroom_id).exists():
+            return render(request, 'device_update.html', {'device': device, 'classrooms': classrooms, 'error': "Aula asignada no introducida"})
         device.name = name
+        device.classroom = Classroom.objects.get(code=classroom_id)
         device.save()
         return render(request, 'device_detail.html', {'device': device, 'classrooms': classrooms, 'info': "Dispositivo " + device.name + " actualizado correctamente"})
     return render(request, 'device_update.html', {'device': device, 'classrooms': classrooms})

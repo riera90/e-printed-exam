@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block navbar %}{% include "navbar.html" with selected="document"%}{% endblock %}
 {% block content %}
     <section id="main-content">
         <div class="container">
@@ -16,31 +17,46 @@
             <form method="post">
               {% csrf_token %}
               <div class="form-group mb-3">
+                  <label for="id">Documento número</label>
+                  <input disabled class="form-control" id="id" name="id" placeholder="Documento número" value="{{ document.id }}">
+              </div>
+              <div class="form-group mb-3">
                   <label for="name">Nombre del documento</label>
-                  <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ document.name }}">
+                  <input class="form-control" id="name" name="name" placeholder="Nombre del documento" value="{{ document.name }}">
               </div>
               <div class="form-group mb-3">
                   <label for="description">Descripción del documento</label>
-                  <input class="form-control" id="description" name="description" placeholder="Descripción del documento" value="{{ document.description }}">
+                  <textarea rows="3" class="form-control" id="description" name="description" placeholder="Descripción del documento">{{ document.description }}</textarea>
+              </div>
+              <div class="form-group mb-3">
+                  <label for="classroom">Aula asignada</label>
+                  <select class="form-select" id="classroom" name="classroom">
+                    {% for classroom in classrooms %}
+                      <option {% if classroom.code == device.classroom.code %}selected{% endif %} value="{{ classroom.code }}" id="{{ classroom.code }}" name="{{ classroom.code }}">{{ classroom.name }}</option>
+                    {% endfor %}
+                  </select>
               </div>
               <div class="form-group mb-3">
                   <label for="subject_code">Código de la asugnatura</label>
                   <input class="form-control" id="subject_code" name="subject_code" placeholder="Código de la signatura" value="{{ document.subject_code }}">
               </div>
+
               <div class="form-group mb-3">
                   <label for="start">Comienzo de la clase</label>
-                  <input class="form-control" id="start" name="start" placeholder="Comienzo de la clase" value="{{ document.start }}">
+                  <input class="form-control" type="text" id="start" name="start" placeholder="HH:MM DD:MM:YYYY" value="{% if document.start.time.hour < 10 %}0{% endif %}{{ document.start.time.hour }}:{% if document.start.time.minute < 10 %}0{% endif %}{{ document.start.time.minute }} {% if document.start.date.day < 10 %}0{% endif %}{{ document.start.date.day }}/{% if document.start.date.month < 10 %}0{% endif %}{{ document.start.date.month }}/{{ document.start.date.year }}">
               </div>
               <div class="form-group mb-3">
                   <label for="end">Finalización de la clase</label>
-                  <input class="form-control" id="end" name="end" placeholder="Finalización de la clase" value="{{ document.end }}">
+                  <input class="form-control" type="text" id="end" name="end" placeholder="HH:MM DD:MM:YYYY" value="{% if document.end.time.hour < 10 %}0{% endif %}{{ document.end.time.hour }}:{% if document.end.time.minute < 10 %}0{% endif %}{{ document.end.time.minute }} {% if document.end.date.day < 10 %}0{% endif %}{{ document.end.date.day }}/{% if document.end.date.month < 10 %}0{% endif %}{{ document.end.date.month }}/{{ document.end.date.year }}">
               </div>
-              <div class="form-group mb-3">
-                  <label for="classroom">Aula</label>
-                  <input class="form-control" id="classroom" name="classroom" placeholder="Aula" value="{{ document.classroom }}">
-              </div>
+
               <button type="submit" class="btn btn-primary">Guardar</button>
             </form>
         </div>
     </section>
+{% endblock %}
+<script>
+
+</script>
+{% block script %}
 {% endblock %}

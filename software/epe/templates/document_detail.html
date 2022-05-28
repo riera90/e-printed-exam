@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block navbar %}{% include "navbar.html" with selected="document"%}{% endblock %}
 {% block content %}
       <section id="main-content">
         <div class="container">
@@ -6,26 +7,63 @@
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Panel</a></li>
                 <li class="breadcrumb-item"><a href="/document">Documentos</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ documennt.name }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ document.name }}</li>
               </ol>
             </nav>
             {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
             {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
             {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
-            <form method="get">
-                <fieldset disabled>
-                      <div class="mb-3">
-                          <label for="code">Código del aula</label>
-                          <input class="form-control" id="code" name="code" placeholder="Código del aula" value="{{ classroom.code }}">
-                      </div>
-                      <div class="mb-3">
-                          <label for="name">Nombre del aula</label>
-                          <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ classroom.name }}">
-                      </div>
-                </fieldset>
-            </form>
-            <a class="btn btn-primary" href=/classroom/{{ document.id }}/update role="button">Modificar</a>
-            <a class="btn btn-danger" href=/classroom/{{ document.id }}/delete role="button">Borrar</a>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Documento número</div>
+                  {{ document.id }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start"">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Nombre del documento</div>
+                  {{ document.name }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start"">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Descripción del documento</div>
+                  {{ document.description }}
+                </div>
+              </li>
+              <a class="list-group-item d-flex justify-content-between align-items-start" href="/classroom/{{ document.classroom.code }}">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"><u>Aula Asignada</u></div>
+                  {{ document.classroom.name }}
+                </div>
+                <span class="badge bg-primary rounded-pill">{{ document.classroom.devices.count }} dispositivo{% if document.classroom.devices.count != 1 %}s{% endif %} en esta aula</span>
+              </a>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Código de la asignatura</div>
+                  {{ document.subject_code }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Inicio</div>
+                  {{ document.start }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">Finalización</div>
+                  {{ document.end }}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <a class="btn btn-primary m-2" href=/document/{{ document.id }}/update role="button">Modificar</a>
+                  <a class="btn btn-danger m-2" href=/document/{{ document.id }}/delete role="button">Borrar</a>
+                </div>
+              </li>
+            </ul>
             </div>
         </div>
     </section>

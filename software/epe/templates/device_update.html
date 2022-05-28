@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block navbar %}{% include "navbar.html" with selected="device"%}{% endblock %}
 {% block content %}
     <section id="main-content">
         <div class="container">
@@ -25,9 +26,9 @@
               </div>
               <div class="form-group mb-3">
                   <label for="classroom">Aula asignada</label>
-                  <select class="form-select" id="classroom" name="classroom" aria-label="Aula asignada" value="{{ device.classroom.code }}">
-                    {% for clasroom in classrooms %}
-                      <option {% if clasroom.code == device.classroom.code %}selected{% endif %} value="{{ classroom.code }}">{{ clasroom.name }}</option>
+                  <select class="form-select" id="classroom" name="classroom">
+                    {% for classroom in classrooms %}
+                      <option {% if classroom.code == device.classroom.code %}selected{% endif %} value="{{ classroom.code }}" id="{{ classroom.code }}" name="{{ classroom.code }}">{{ classroom.name }}</option>
                     {% endfor %}
                   </select>
               </div>
@@ -36,3 +37,4 @@
         </div>
     </section>
 {% endblock %}
+
