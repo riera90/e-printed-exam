@@ -10,9 +10,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Agregar</li>
               </ol>
             </nav>
-            {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
-            {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
-            {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+            {% include "warnings.html" %}
             <form method="post">
               {% csrf_token %}
               <div class="form-group mb-3">

@@ -2,6 +2,7 @@
 {% block content %}
     <section id="main-content">
         <div class="container">
+            {% include "warnings.html" %}
             <div style="height: 200px"></div>
             <h1>Welcome, {{user.username}}</h1>
             <div style="height: 100px"></div>

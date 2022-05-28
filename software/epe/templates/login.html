@@ -59,9 +59,7 @@
       <form method="post">
         {% csrf_token %}
         <img class="mb-4" src="{% static "media/logo_250_250.png" %}" alt="" width="120" height="120">
-        {% if error %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endif %}
-        {% if warning %}<div class="alert alert-warning" role="alert">{{ warning }}</div>{% endif %}
-        {% if info %}<div class="alert alert-primary" role="alert">{{ info }}</div>{% endif %}
+        {% include "warnings.html" %}
         <div class="form-floating">
           <input name="user" type="user" class="form-control" id="user" placeholder="Usuario">
           <label for="user">Usuario</label>
