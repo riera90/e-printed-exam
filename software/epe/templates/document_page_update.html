@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block navbar %}{% include "navbar.html" with selected="document"%}{% endblock %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/document">Documentos</a></li>
+                <li class="breadcrumb-item"><a href="/document/{{ document.id }}">{{ document.name }}</a></li>
+                <li class="breadcrumb-item"><a href="/document/{{ document.id }}/page">Páginas</a></li>
+                <li class="breadcrumb-item active">Página {{ page.order }}</li>
+              </ol>
+            </nav>
+            {% include "warnings.html" %}
+            <div class="row">
+                <div class="col">
+                    <h3>Previsualización</h3>
+                    <canvas class="border" id="canvas" width="400" height="300"></canvas>
+                </div>
+                {% if page.type == "I" %}
+                    <img hidden id="canvas_image" src="/media/snd/{{ page.id }}.jpg" alt="" onerror="refreshImage()" onload="printImage()">
+                {% endif %}
+                <div class="col">
+                    <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label for="order">Numero de página</label>
+                                <input class="form-control" disabled id="order" name=order" placeholder="Número del elemento" value="{{ page.order }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="type">Tipo de página</label>
+                                <input class="form-control" disabled id="type" name=type" placeholder="Tipo de elemento" value="{% if page.type == "T" %}Texto{% else %}Imagen{% endif %}">
+                            </div>
+                            {% if page.type == "T" %}
+                                <div class="form-group mb-3">
+                                    <label for="title">Título</label>
+                                    <input class="form-control" id="title" name="title" placeholder="Título" value="{{ page.title }}" onkeyup="update_text()">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="body">Cuerpo</label>
+                                    <textarea rows="3" class="form-control" id="body" name="body" placeholder="Cuerpo" onkeyup="update_text()">{{ page.body }}</textarea>
+                                </div>
+                            {% else %}
+                                <div class="form-group mb-3">
+                                    <label for="image">Imagen</label>
+                                    <input class="form-control" id="image" name="image" accept="image/jpeg, image/png" type="file">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="threshold">Valor de binarización (1-255)</label>
+                                    <input class="form-control" id="threshold" name="threshold" type="number" placeholder="Valor de binarización" value="140">
+                                    <p>(cuanto más alto más negra la imagen)</p>
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </form>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if page.type == "I" %}
+                                <input hidden type="text" name="type" value="T">
+                                <button type="submit" class="btn btn-secondary">Cambiar a Texto</button>
+                            {% else %}
+                                <input hidden type="text" name="type" value="I">
+                                <button type="submit" class="btn btn-secondary">Cambiar a Imagen</button>
+                            {% endif %}
+                        </form>
+                        <a href="/document/{{ document.id }}/page/{{ page.order }}/delete" class="btn btn-danger">Borrar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+<script>
+    function sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+      } while (currentDate - date < milliseconds);
+    }
+
+    var global_retries = 30;
+
+    {% if page.type == "I" %}
+        function refreshImage(){
+            sleep(100);
+            if (global_retries <= 0)
+                return;
+            global_retries--;
+            var timestamp = new Date().getTime();
+            var el = document.getElementById("canvas_image");
+            var queryString = "?t=" + timestamp;
+            el.src = "/media/snd/{{ page.id }}.jpg" + queryString;
+        }
+
+        function printImage() {
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+            ctx.drawImage(document.getElementById("canvas_image"),(400-{{ page.w }})/2,(300-{{ page.h }})/2);
+            ctx.stroke();
+        }
+
+    {% else %}
+        function update_text() {
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+            ctx.fillStyle = '#FFFFFF';
+            ctx.clearRect(0,0,400,300);
+            ctx.stroke();
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(0, 0, 400, 28);
+            ctx.stroke();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = "24px Courier New";
+            ctx.fillText(document.getElementById("title").value, 5, 21);
+            ctx.stroke();
+            ctx.fillStyle = '#000000';
+            ctx.font = "16px Courier New";
+            var lines = document.getElementById("body").value.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                ctx.fillText(lines[i], 5, 42 + (i * 15));
+                ctx.stroke();
+            }
+            if (lines.length <= 18)
+                document.getElementById("body").setAttribute("rows", lines.length)
+        }
+        update_text();
+    {% endif %}
+</script>
+{% endblock %}

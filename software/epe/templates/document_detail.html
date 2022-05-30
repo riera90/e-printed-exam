@@ -24,7 +24,7 @@
                   {{ document.name }}
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start"">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                   <div class="fw-bold">Descripción del documento</div>
                   {{ document.description }}
@@ -55,6 +55,12 @@
                   {{ document.end }}
                 </div>
               </li>
+              <a class="list-group-item d-flex justify-content-between align-items-start" href="/document/{{ document.id }}/page">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"><u>Contenido</u></div>
+                  {{ document.pages.count }} páginas (click aqui para visualizar)
+                </div>
+              </a>
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                   <a class="btn btn-primary m-2" href=/document/{{ document.id }}/update role="button">Modificar</a>

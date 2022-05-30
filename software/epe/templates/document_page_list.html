@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block navbar %}{% include "navbar.html" with selected="document"%}{% endblock %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Panel</a></li>
+                <li class="breadcrumb-item"><a href="/document">Documentos</a></li>
+                <li class="breadcrumb-item"><a href="/document/{{ document.id }}">{{ document.name }}</a></li>
+                <li class="breadcrumb-item active">Páginas</li>
+              </ol>
+            </nav>
+            {% include "warnings.html" %}
+            <a href=/document/{{ document.id }}/page/create>
+                <button type="button" class="btn btn-primary mb-3">Agregar nueva página</button>
+            </a>
+            {% for page,lines in pages %}
+                <div class="card mb-3 " style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-1 text-center" style="margin-top: 30px; margin-bottom: 30px">
+                            <a class="fa-solid fa-chevron-up" href="/document/{{ document.id }}/page/{{ page.order }}/up"></a>
+                            <div style="height:57px"></div>
+                            <a class="fa-solid fa-chevron-down" href="/document/{{ document.id }}/page/{{ page.order }}/down"></a>
+                        </div>
+                        <a class="col-md-5 text-center" href="/document/{{ document.id }}/page/{{ page.order }}">
+                            <canvas class="border" id="canvas_{{ page.id }}" width="200" height="150"></canvas>
+                        </a>
+                        {% if page.type == "I" %}
+                            <img hidden id="canvas_image_{{ page.id }}" src="/media/snd/{{ page.id }}_half.jpg" alt="" onerror="refreshImage{{ page.id }}()" onload="printImage{{ page.id }}()">
+                        {% endif %}
+                        <div class="col-md-6 text-center">
+                            <div class="card-body mt-2">
+                                <h5 class="card-title">Página {{ page.order }}</h5>
+                                <p class="card-text">{% if page.type == "I" %}Imagen{% else %}Texto{% endif %}</p>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </section>
+{% endblock %}
+
+{% block script %}
+<script>
+    function sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+      } while (currentDate - date < milliseconds);
+    }
+
+    var global_retries = 500;
+
+    {% for page,lines in pages2 %}
+        {% if page.type == "I" %}
+            function refreshImage{{ page.id }}(){
+                sleep(100);
+                if (global_retries <= 0)
+                    return;
+                global_retries--;
+                var timestamp = new Date().getTime();
+                var el = document.getElementById("canvas_image_{{ page.id }}");
+                var queryString = "?t=" + timestamp;
+                el.src = "/media/snd/{{ page.id }}_half.jpg" + queryString;
+
+            }
+
+            function printImage{{ page.id }}() {
+                var c = document.getElementById("canvas_{{ page.id }}");
+                var ctx = c.getContext("2d");
+                ctx.drawImage(document.getElementById("canvas_image_{{ page.id }}"),(400-{{ page.w }})/4,(300-{{ page.h }})/4);
+                ctx.stroke();
+            }
+
+        {% else %}
+            var c{{ page.id }} = document.getElementById("canvas_{{ page.id }}");
+            var ctx{{ page.id }} = c{{ page.id }}.getContext("2d");
+            ctx{{ page.id }}.fillStyle='#FF0000';
+            ctx{{ page.id }}.fillRect(0, 0, 200, 14);
+            ctx{{ page.id }}.stroke();
+            ctx{{ page.id }}.fillStyle='#FFFFFF';
+            ctx{{ page.id }}.font = "12px Courier New";
+            ctx{{ page.id }}.fillText("{{ page.title }}", 3, 10.5);
+            ctx{{ page.id }}.stroke();
+            ctx{{ page.id }}.fillStyle='#000000';
+            ctx{{ page.id }}.font = "8px Courier New";
+            {% for line in lines %}
+                ctx{{ page.id }}.fillText("{{ line }}", 3, 21+(({{ forloop.counter0 }}*15/2)));
+                ctx{{ page.id }}.stroke();
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</script>
+{% endblock %}

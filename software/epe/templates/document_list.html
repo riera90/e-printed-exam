@@ -18,7 +18,7 @@
                     <a href="/document/{{ document.id }}" class="list-group-item d-flex justify-content-between align-items-center">
                         {{ document.name }}, {{ document.description }}
                         <div class="flex-row">
-                            <span class="badge bg-secondary rounded-pill">test2</span>
+                            <span class="badge bg-primary rounded-pill">{{ document.pages.count }} páginas</span>
                         </div>
                     </a>
                 {% endfor %}

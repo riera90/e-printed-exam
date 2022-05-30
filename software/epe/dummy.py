@@ -49,3 +49,16 @@ doc1.save()
 doc2.save()
 doc3.save()
 doc4.save()
+
+
+'''CREACIÓN DE PÁGINAS'''
+from page.models import Page
+print('Generating Page Entities')
+p1=Page(document=doc1, order=0, type="T")
+p2=Page(document=doc1, order=1, type="T")
+p3=Page(document=doc1, order=2, type="T")
+p4=Page(document=doc1, order=3, type="T")
+p1.save()
+p2.save()
+p3.save()
+p4.save()
