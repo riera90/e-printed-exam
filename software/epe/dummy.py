@@ -1,6 +1,7 @@
 from datetime import time
 import random
 
+from PIL import Image
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import datetime
 
@@ -41,10 +42,12 @@ dev4.save()
 '''CREACIÓN DE DOCUMENTOS'''
 from document.models import Document
 print('Generating Document Entities')
+doctest=Document(name="prueba tecnica", description="prueba de sistema completa", subject_code="TEST0001", classroom=atc1, start=datetime.now(), end=datetime.now())
 doc1=Document(name="DOCUMENT 1", description="Descripción del documento 1", subject_code="SUBJ001", classroom=atc1, start=datetime.now(), end=datetime.now())
 doc2=Document(name="DOCUMENT 2", description="Descripción del documento 2", subject_code="SUBJ002", classroom=atc1, start=datetime.now(), end=datetime.now())
 doc3=Document(name="DOCUMENT 3", description="Descripción del documento 3", subject_code="SUBJ003", classroom=atc2, start=datetime.now(), end=datetime.now())
 doc4=Document(name="DOCUMENT 4", description="Descripción del documento 4", subject_code="SUBJ004", classroom=atc2, start=datetime.now(), end=datetime.now())
+doctest.save()
 doc1.save()
 doc2.save()
 doc3.save()
@@ -54,11 +57,30 @@ doc4.save()
 '''CREACIÓN DE PÁGINAS'''
 from page.models import Page
 print('Generating Page Entities')
-p1=Page(document=doc1, order=0, type="T")
-p2=Page(document=doc1, order=1, type="T")
-p3=Page(document=doc1, order=2, type="T")
-p4=Page(document=doc1, order=3, type="T")
+p1=Page(document=doctest, order=1, type="T", title="Test texto", body='''Esto es una prueba de texto para las
+diapositivas, está intencionado para 
+rellenar lo maximo posible de la pantalla
+lo mismo está hasta demasiado llena.
+
+Pero bueno, lo importante es que esto
+funcione correctamente en el display
+de tinta electrónica.
+
+Espero que la cantidad de texto que la
+pantalla es capaz de acomodar sea
+suficiente para una pregunta de examen
+de universidad.
+
+Aunque el sistema tenga limitaciones creo
+que este sera suficiente para  funcion.
+
+Atentamente, firmado. 0x4455434B''')
 p1.save()
+
+image = Image.open("media/spider.png")
+bwimage = image.convert("L")
+bwimage = bwimage.point(lambda p: 255 if p > 140 else 0)
+p2=Page(document=doctest, order=2, type="I", h=bwimage.size[1], w=bwimage.size[0], binary_image=bwimage.tobytes())
 p2.save()
-p3.save()
-p4.save()
+image.close()
+bwimage.close()
