@@ -1,5 +1,5 @@
 set(COMPONENT_ADD_INCLUDEDIRS .)
 
-set(COMPONENT_SRCS "font16.c font24.c")
+set(COMPONENT_SRCS "wireless.c")
 
 register_component()

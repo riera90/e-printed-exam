@@ -11,18 +11,89 @@
               </ol>
             </nav>
             {% include "warnings.html" %}
-            <form method="post">
-              {% csrf_token %}
-              <div class="form-group mb-3">
-                  <label for="uuid">Identificador del dispositivo</label>
-                  <input class="form-control" id="uuid" name="uuid" placeholder="Identificador del dispositivo" value="{{ device.uuid }}">
-              </div>
-              <div class="form-group mb-3">
-                  <label for="name">Nombre del aula</label>
-                  <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ classroom.name }}">
-              </div>
-              <button type="submit" class="btn btn-primary">Agregar</button>
-            </form>
+            <div class="row row-cols-1 row-cols-md-4 g-4 align-items-center mt-5" id="devices_container">
+                LOADING
+            </div>
         </div>
     </section>
+{% endblock %}
+{% block script %}
+<script>
+
+    function discover_device() {
+        fetch("http://127.0.0.1:8000/device/discover/")
+        .then(response => {
+            // indicates whether the response is successful (status code 200-299) or not
+            if (!response.ok) {
+                console.log(`Request failed with status ${reponse.status}`);
+                throw new Error(`Request failed with status ${reponse.status}`)
+            }
+            return response.json()
+        }).then(data => {
+            let container = document.getElementById("devices_container")
+            container.innerHTML = "";
+            var csrf_token = "{{ csrf_token }}";
+            csrf_token
+            for (let i = 0; i < data.devices.length; i++) {
+                console.log(i);
+                var device = document.createElement('div');
+                device.innerHTML = "" +
+                    "<div class=\"row align-items-center mb-4\">" +
+                        "<div class=\"col-6 mx-auto\">" +
+                            "<div class=\"card shadow border\" style=\"width: 18rem;\">" +
+                                "<div class=\"card-body d-flex flex-column align-items-center\">" +
+                                    "<form method=\"post\" class=\"m-0\">" +
+                                        "<ul class=\"list-group list-group-flush\">" +
+                                            "<div class=\"ms-2 me-auto mb-3 mt-1\">" +
+                                                "<span class=\"fw-bold m-3\">UUID</span>" +
+                                                "<span class=\"m-3\">"+data.devices[i].uuid+"</span>" +
+                                            "</div>" +
+                                        "</ul>" +
+                                        "<input type=\"hidden\" name=\"csrfmiddlewaretoken\" value=\""+csrf_token+"\">" +
+                                        "<input hidden class=\"form-control\" id=\"uuid\" name=\"uuid\" value=\""+data.devices[i].uuid+"\">" +
+                                        "<button class=\"btn btn-primary\" type=\"submit\" type=\"button\">" +
+                                            "<i class=\"fa-solid fa-check\"></i>" +
+                                            "Agregar dispositivo" +
+                                        "</button>" +
+                                    "</form>" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "";
+                container.appendChild(device);
+            }
+
+            var device = document.createElement('div');
+            device.innerHTML = "" +
+                "<div class=\"row align-items-center mb-4\">" +
+                    "<div class=\"col-6 mx-auto\">" +
+                        "<div class=\"card shadow border\" style=\"width: 18rem;\">" +
+                            "<div class=\"card-body d-flex flex-column align-items-center mt-0\">" +
+                                "<ul class=\"list-group list-group-flush mt-0\">" +
+                                    "<div class=\"ms-2 me-auto m-2 mt-0\">" +
+                                        "<div class=\"spinner-grow text-primary mt-0\" style=\"animation-delay: 000ms; animation-duration: 3s\"></div>" +
+                                        "<div class=\"spinner-grow text-primary mt-0\" style=\"animation-delay: 200ms; animation-duration: 3s\"></div>" +
+                                        "<div class=\"spinner-grow text-primary mt-0\" style=\"animation-delay: 400ms; animation-duration: 3s\"></div>" +
+                                        "<div class=\"spinner-grow text-primary mt-0\" style=\"animation-delay: 600ms; animation-duration: 3s\"></div>" +
+                                        "<div class=\"spinner-grow text-primary mt-0\" style=\"animation-delay: 800ms; animation-duration: 3s\"></div>" +
+                                    "</div>" +
+                                "</ul>" +
+                                "<button class=\"btn btn-primary\" type=\"button\" disabled>" +
+                                    "<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span>" +
+                                    "Esperando dispositivos" +
+                                "</button>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
+            "";
+            container.appendChild(device);
+        })
+        .catch(error => console.log(error))
+    }
+
+    discover_device();
+    setInterval(discover_device, 6000); // Repeat discover_device every 5 seconds
+</script>
 {% endblock %}

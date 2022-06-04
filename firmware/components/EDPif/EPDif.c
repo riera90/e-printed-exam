@@ -68,7 +68,7 @@ void epdIfSpiTransfer(uint32_t data, uint32_t bits) {
     uint32_t addr = 0;
     uint32_t MOSI = data;
     uint32_t MISO;
-   trans.cmd = &cmd;
+    trans.cmd = &cmd;
     trans.addr = &addr;
     trans.mosi = &MOSI;
     trans.miso = &MISO;

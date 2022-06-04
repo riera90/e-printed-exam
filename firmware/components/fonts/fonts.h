@@ -20,9 +20,9 @@ struct sFONT {
 };
 
 extern struct sFONT Font24;
-extern struct sFONT Font20;
+//extern struct sFONT Font20;
 extern struct sFONT Font16;
-extern struct sFONT Font12;
-extern struct sFONT Font8;
+//extern struct sFONT Font12;
+//extern struct sFONT Font8;
 
 #endif
