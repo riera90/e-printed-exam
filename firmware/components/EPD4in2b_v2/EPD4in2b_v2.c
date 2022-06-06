@@ -55,11 +55,11 @@ void edp4in2bV2WaitUntilIdle(void) {
  *          see Epd::Sleep();
  */
 void edp4in2bV2Reset(void) {
-    epdIfDigitalWrite(RST_PIN, 0xFFFFFFFF);
-    epdIfDelayMs(200);
     epdIfDigitalWrite(RST_PIN, 0x00000000);
-    epdIfDelayMs(2);
+    epdIfDelayMs(200);
     epdIfDigitalWrite(RST_PIN, 0xFFFFFFFF);
+    epdIfDelayMs(2);
+    epdIfDigitalWrite(RST_PIN, 0x00000000);
     epdIfDelayMs(200);   
 }
 
