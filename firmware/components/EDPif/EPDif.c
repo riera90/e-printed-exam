@@ -19,13 +19,16 @@ uint32_t epdIfDigitalRead(int pin) {
 }
 
 
-void epdIfDelayMs(unsigned int delaytime) {
+int epdIfDelayMs(unsigned int delaytime) {
+    int aux = 0;
     if (delaytime < 20){
-        int target = delaytime<<8;
+        int target = delaytime*28000;
         for (size_t i = 0; i < target; i++)
-            vTaskDelay(0);
-    }else
-        vTaskDelay(delaytime / portTICK_PERIOD_MS);
+            aux += i;
+        return aux;
+    }
+    vTaskDelay(delaytime / portTICK_PERIOD_MS);
+    return aux;
 }
 
 /* SPI transmit data, format: 8bit command (read value: 3, write value: 4) + 8bit address(value: 0x0) + 64byte data */
@@ -133,5 +136,12 @@ int epdIfInit(void) {
     pinMode(DC_PIN, OUTPUT);
     pinMode(BUSY_PIN, INPUT); 
     SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));*/
+    return 0;
+}
+
+
+int epdIfDeinit(void) {
+    ESP_LOGI("epdIfInit", "deinit gpio");
+    spi_deinit(HSPI_HOST);
     return 0;
 }

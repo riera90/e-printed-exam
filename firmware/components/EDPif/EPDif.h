@@ -26,8 +26,9 @@ typedef enum {
 } spi_master_mode_t;
 
 int epdIfInit(void);
+int epdIfDeinit(void);
 void epdIfDigitalWrite(int pin, uint32_t value); 
 uint32_t epdIfDigitalRead(int pin);
-void epdIfDelayMs(unsigned int delaytime);
+int epdIfDelayMs(unsigned int delaytime);
 void epdIfSpiTransfer(uint32_t data, uint32_t bits);
 #endif

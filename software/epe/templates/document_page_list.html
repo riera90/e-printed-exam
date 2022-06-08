@@ -74,7 +74,7 @@
             function printImage{{ page.id }}() {
                 var c = document.getElementById("canvas_{{ page.id }}");
                 var ctx = c.getContext("2d");
-                ctx.drawImage(document.getElementById("canvas_image_{{ page.id }}"),(400-{{ page.w }})/4,(300-{{ page.h }})/4);
+                ctx.drawImage(document.getElementById("canvas_image_{{ page.id }}"),0 , 0);
                 ctx.stroke();
             }
 

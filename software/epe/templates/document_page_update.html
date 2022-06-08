@@ -99,7 +99,7 @@
         function printImage() {
             var c = document.getElementById("canvas");
             var ctx = c.getContext("2d");
-            ctx.drawImage(document.getElementById("canvas_image"),(400-{{ page.w }})/2,(300-{{ page.h }})/2);
+            ctx.drawImage(document.getElementById("canvas_image"), 0, 0);
             ctx.stroke();
         }
 
@@ -118,7 +118,7 @@
             ctx.fillText(document.getElementById("title").value, 5, 21);
             ctx.stroke();
             ctx.fillStyle = '#000000';
-            ctx.font = "16px Courier New";
+            ctx.font = "18px Courier New";
             var lines = document.getElementById("body").value.split('\n');
             for (var i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], 5, 42 + (i * 15));

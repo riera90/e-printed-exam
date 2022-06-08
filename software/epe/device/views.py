@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from PIL import Image
 from django.utils import timezone
 import pytz
 from django.http import HttpResponse
@@ -9,7 +10,9 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 
 from classroom.models import Classroom
+from document.models import Document
 from epe import settings
+from page.models import Page
 from .models import Device, vendors
 from epe.utils import *
 from rest_framework.views import APIView
@@ -120,3 +123,48 @@ def device_api_acknowledgment_device(request):
         device.save()
 
     return HttpResponse(json.dumps({"ttl": ttl, "token": device.token}), content_type="application/json")
+
+@csrf_exempt
+def device_api_get_page(request):
+    print(request.POST)
+    if not request.method == "POST":
+        return HttpResponse(json.dumps({"error": "only post requests"}), content_type="application/json")
+    if not request.POST.get('secret'):
+        return HttpResponse(json.dumps({"error": "only requests with secret attribute"}), content_type="application/json")
+    if request.POST.get('secret') != server_secret:
+        return HttpResponse(json.dumps({"error": "invalid secret"}), content_type="application/json")
+    if not request.POST.get('token'):
+        return HttpResponse(json.dumps({"error": "only requests with token attribute"}), content_type="application/json")
+    if not request.POST.get('uuid'):
+        return HttpResponse(json.dumps({"error": "parse error, no uuid in post"}), content_type="application/json")
+    if not request.POST.get('page'):
+        return HttpResponse(json.dumps({"error": "parse error, no page in post"}), content_type="application/json")
+    uuid = request.POST.get('uuid')
+    token = request.POST.get('token')
+    Device.objects.get(uuid=uuid)
+    uuid = request.POST['uuid']
+    page = int(request.POST['page'])
+    try:
+        device = Device.objects.get(uuid=uuid)
+    except Device.DoesNotExist:
+        return HttpResponse(json.dumps({"error": "invalid uuid"}), content_type="application/json")
+    if device.token != token:
+        return HttpResponse(json.dumps({"error": "invalid token"}), content_type="application/json")
+    document = Document.objects.get(id=1)
+    try:
+        page = document.pages.get(order=page)
+    except Page.DoesNotExist:
+        return HttpResponse(json.dumps({"page_error": "document has no page "+str(page)}), content_type="application/json")
+
+    if page.type == "I":
+        image = Image.frombytes('L', (page.w, page.h), page.binary_image)
+        image_bits = ""
+        for y in range(300):
+            for x in range(400):
+                if image.getpixel((x,y)):
+                    image_bits+='1'
+                else:
+                    image_bits+='0'
+
+        return HttpResponse(json.dumps({"type": page.type, "data": image_bits}), content_type="application/json")
+    return HttpResponse(json.dumps({"type": page.type, "title": page.title, "body": page.body+"\r\n"}), content_type="application/json")

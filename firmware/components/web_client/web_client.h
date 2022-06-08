@@ -6,6 +6,7 @@
 
 void http_data_event_callback(char* response, int length);
 void http_error_event_callback();
+void http_end_event_callback();
 
 void http_post(const char* url, const char* payload);
 

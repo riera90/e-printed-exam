@@ -29,6 +29,7 @@ char http_last_event = HTTP_EVENT_HEADER_SENT;
 
 extern void http_data_event_callback(char* response, int length);
 extern void http_error_event_callback();
+extern void http_end_event_callback();
 
 esp_err_t _http_event_handle(esp_http_client_event_t *evt)
 {
@@ -62,6 +63,7 @@ esp_err_t _http_event_handle(esp_http_client_event_t *evt)
             break;
         case HTTP_EVENT_ON_FINISH:
             http_last_event = HTTP_EVENT_ON_FINISH;
+            http_end_event_callback();
             ESP_LOGI(TAG, "HTTP_EVENT_ON_FINISH");
             break;
         case HTTP_EVENT_DISCONNECTED:
@@ -79,6 +81,7 @@ void http_post(const char* url, const char* payload)
     esp_http_client_config_t config = {
     .url = url,
     .event_handler = _http_event_handle,
+    .buffer_size = MAX_HTTP_RECV_BUFFER,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_http_client_set_method(client, HTTP_METHOD_POST);
@@ -99,6 +102,7 @@ void http_get(const char* url)
     esp_http_client_config_t config = {
     .url = url,
     .event_handler = _http_event_handle,
+    .buffer_size = MAX_HTTP_RECV_BUFFER,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_err_t err = esp_http_client_perform(client);

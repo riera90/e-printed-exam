@@ -53,6 +53,7 @@
 #define HEIGHT 300
 
 int  edp4in2bV2Init(void);
+int  edp4in2bV2Deinit(void);
 void edp4in2bV2SendCommand(uint32_t command);
 void edp4in2bV2SendData(uint32_t data);
 void edp4in2bV2WaitUntilIdle(void);

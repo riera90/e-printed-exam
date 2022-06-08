@@ -15,7 +15,7 @@ void PainterDrawAbsolutePixel(struct Painting* painting, int x, int y, int color
     }
     if (painting->inv) {
         if (colored) {
-            painting->data[(x + y * painting->w) / 8] |= 0x80 >> (x % 8);
+            painting->data[(x + y * painting->w) / 8] |= 0x80 >> (x % 8); // mem =& ~(0x01 >> bit) mem =| (0x01 >> bit)
         } else {
             painting->data[(x + y * painting->w) / 8] &= ~(0x80 >> (x % 8));
         }

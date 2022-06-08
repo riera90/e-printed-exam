@@ -31,12 +31,12 @@
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_0) | (1ULL<<GPIO_INPUT_IO_1))
 
 #define ENABLE_SCREEN
+//#define DISPLAY_FRAME
 
 bool connected_wifi = false;
 bool connected_server = false;
 bool autenticated = false;
 char token[256];
-unsigned int ttl = 0;
 
 struct State {
     char token[256];
@@ -53,7 +53,86 @@ void wifi_post_ip_phase() {
     connected_wifi = true;
 }
 
-void http_data_event_callback(char* data, int length){
+
+bool is_text_response = false;
+bool is_image_response = false;
+
+
+int parts = 6; // NEEDS to be divisible by 300
+int part;
+int y_step;
+int target_x;
+int target_y;
+int input_index;
+char* input_image_ptr;
+
+
+void print_line_init(){
+    image.h = 16;
+    image.w = 400;
+    image.data = (unsigned char*) malloc((400*16)/8);
+}
+
+void print_line_deinit(){
+    free(image.data);
+} 
+
+void print_line(char* line, int line_num) {
+    PainterClear(&image, UNCOLORED);
+    edp4in2bV2SetPartialWindowRed(image.data, 0, 42-15 + (line_num * 15), image.w, image.h);
+    PainterDrawStringAt(&image, 0, 0, line, &Font16, COLORED);
+    edp4in2bV2SetPartialWindowBlack(image.data, 0, 42-15 + (line_num * 15), image.w, image.h);
+}
+
+void print_part_of_image_init(int step){
+    image.h = 300/step;
+    image.w = 400;
+    image.data = (unsigned char*) malloc((400*(300/step))/8);
+}
+void print_part_of_image_deinit(){
+    edp4in2bV2SetPartialWindowBlack(image.data, 0, image.h*part, image.w, image.h);
+    PainterClear(&image, UNCOLORED);
+    edp4in2bV2SetPartialWindowRed(image.data, 0, image.h*part, image.w, image.h);
+    ESP_LOGE("HTTP CB", "writing to screen!");
+    ESP_LOGW("HTTP CB", "current state x=%i, y=%i", target_x, target_y);
+    free(image.data);
+}
+
+
+
+void http_data_event_callback(char* data, int length) {
+    if (is_image_response){
+        ESP_LOGI("HTTP CB", "start: %.*s", 5, data-1);
+        ESP_LOGI("HTTP CB", "end: %.*s", 5, data+length-4);
+        ESP_LOGW("HTTP CB", "chunked!");
+        ESP_LOGW("HTTP CB", "current state x=%i, y=%i", target_x, target_y);
+        char* end_token_ptr = strchr(data, '"');
+        if (end_token_ptr)
+            length -= 2;
+        for (size_t input_index = 0; input_index < length && part < parts; input_index++){
+            if (data[input_index] == '1'){
+                PainterDrawPixel(&image, target_x, target_y, UNCOLORED);
+            }else{
+                PainterDrawPixel(&image, target_x, target_y, COLORED);
+            }
+            target_x++;
+            if (target_x >= 400){
+                target_x = 0;
+                target_y ++;
+            }
+            if (target_y >= y_step){
+                edp4in2bV2SetPartialWindowBlack(image.data, 0, image.h*part, image.w, image.h);
+                PainterClear(&image, UNCOLORED);
+                edp4in2bV2SetPartialWindowRed(image.data, 0, image.h*part, image.w, image.h);
+                ESP_LOGE("HTTP CB", "writing to screen!");
+                ESP_LOGW("HTTP CB", "current state x=%i, y=%i", target_x, target_y);
+                target_y = 0;
+                part++;
+            }
+        }
+        return;
+    }
+
     ESP_LOGI("HTTP CB", "%.*s", length, data);
     connected_server = true;
     char* token_key_ptr = strstr(data, "token");
@@ -64,10 +143,9 @@ void http_data_event_callback(char* data, int length){
             char* end_token_ptr = strchr(token_ptr, '"');
             if (end_token_ptr != NULL){
                 int token_length = end_token_ptr - token_ptr;
-                if (token_length < 256){
+                if (token_length < 256 && token_length < 32){
                     autenticated = true;
                     memcpy(state.token, token_ptr, token_length);
-                    ESP_LOGI("HTTP CB", "token: %s", state.token);
                     return;
                 }else{
                     ESP_LOGE("HTTP CB", "too long of a token");
@@ -75,11 +153,150 @@ void http_data_event_callback(char* data, int length){
                 }
             }
         }
-        ESP_LOGI("HTTP CB", "token not in response");
+        //ESP_LOGI("HTTP CB", "token not in response");
     }
+    char* type_ptr = strstr(data, "type");
+    if (type_ptr != NULL) {
+        type_ptr+=8;
+        if (type_ptr[0] == 'I'){
+            y_step = 300/parts;
+            ESP_LOGI("HTTP CB", "Image");
+            is_image_response = true;
+            print_part_of_image_init(parts);
+
+            part = 0;
+            target_x = -44;
+            target_y = 0;
+            input_image_ptr = strstr(data, "\"data\"");
+            input_image_ptr += 9;
+            ESP_LOGI("HTTP CB", "start: %.*s", 5, input_image_ptr-1);
+            int data_length = length - (input_image_ptr-data);
+            ESP_LOGI("HTTP CB", "end: %.*s", 5, input_image_ptr+data_length-4);
+            for (size_t input_index = input_image_ptr; input_index < data_length && part < parts; input_index++){
+                if (data[input_index] == '1'){
+                    PainterDrawPixel(&image, target_x, target_y, UNCOLORED);
+                }else{
+                    PainterDrawPixel(&image, target_x, target_y, COLORED);
+                }
+                target_x++;
+                if (target_x >= 400){
+                    target_x = 0;
+                    target_y ++;
+                }
+                if (target_y >= y_step){
+                    edp4in2bV2SetPartialWindowBlack(image.data, 0, image.h*part, image.w, image.h);
+                    PainterClear(&image, UNCOLORED);
+                    edp4in2bV2SetPartialWindowRed(image.data, 0, image.h*part, image.w, image.h);
+                    ESP_LOGE("HTTP CB", "writing to screen!");
+                    ESP_LOGW("HTTP CB", "current state x=%i, y=%i", target_x, target_y);
+                    target_y = 0;
+                    part++;
+                }
+            }
+        }else{
+            char* title_ptr = strstr(data, "\"title\"");
+            if (title_ptr){
+                int line_num = 0;
+                ESP_LOGI("HTTP CB", "text");
+                is_text_response = true;
+                
+                title_ptr+=10;
+                char title[124];
+                bzero(title, 124);
+                char* title_end_ptr = strchr(title_ptr, '"');
+                memcpy(title, title_ptr, title_end_ptr-title_ptr);
+                ESP_LOGI("HTTP CB", "title: %s", title);
+
+                image.h = 24;
+                image.w = 400;
+                image.data = (unsigned char*) malloc((400*24)/8);
+                PainterClear(&image, UNCOLORED);
+                edp4in2bV2SetPartialWindowBlack(image.data, 0, 0, image.w, image.h);
+                edp4in2bV2SetPartialWindowBlack(image.data, 0, 24, image.w, image.h);
+                edp4in2bV2SetPartialWindowBlack(image.data, 0, 300-24, image.w, image.h);
+                PainterClear(&image, COLORED);
+                PainterDrawStringAt(&image, 0, 0, title, &Font24, UNCOLORED);
+                edp4in2bV2SetPartialWindowRed(image.data, 0, 0, image.w, image.h);
+                free(image.data);
+
+                char* body_ptr = strstr(data, "\"body\"");
+                body_ptr+=9;
+                ESP_LOGI("HTTP CB", "body: %.*s", 10, body_ptr);
+                char line[64];
+                char* line_ptr = body_ptr;
+                char* line_end_ptr = strstr(line_ptr+1, "\\r\\n");
+                print_line_init();
+                while(line_end_ptr){
+                    bzero(line,64);
+                    memcpy(line, line_ptr, line_end_ptr-line_ptr);
+                    ESP_LOGI("HTTP CB", "line: %s", line);
+                    print_line(line, line_num++);
+                    line_ptr = line_end_ptr+4;
+                    line_end_ptr = strstr(line_ptr-1, "\\r\\n");
+                }
+            }
+        }
+        return;
+    }
+    char* error_ptr = strstr(data, "page_error");
+    if (error_ptr){
+        ESP_LOGI("HTTP CB", "end of document:");
+        state.current_page = 1;
+        image.h = 16;
+        image.w = 400;
+        image.data = (unsigned char*) malloc(16*400);
+        PainterClear(&image, UNCOLORED);
+        edp4in2bV2SetPartialWindowRed(image.data, 0, 0, image.w, image.h);
+        PainterDrawStringAt(&image, 0, 0, "fin del documento", &Font16, COLORED);
+        edp4in2bV2SetPartialWindowBlack(image.data, 0, 0, image.w, image.h);
+        PainterClear(&image, UNCOLORED);
+        edp4in2bV2SetPartialWindowRed(image.data, 0, 16, image.w, image.h);
+        PainterDrawStringAt(&image, 0, 0, "regresando al inicio", &Font16, COLORED);
+        edp4in2bV2SetPartialWindowBlack(image.data, 0, 16, image.w, image.h);
+        edp4in2bV2DisplayFrame();
+        epdIfDelayMs(1000);
+        char* payload = (char*)malloc(256);
+        if (payload == NULL){
+            ESP_LOGE("httpcb", "COULD NOT ALLOCATE MEMORY");
+            esp_restart();
+        }
+        bzero(payload, 256);
+        strcpy(payload, "secret=");
+        strcat(payload, SERVER_SECRET);
+        strcat(payload, "&uuid=");
+        strcat(payload, state.uuid);
+        strcat(payload, "&token=");
+        strcat(payload, state.token);
+        strcat(payload, "&page=");
+        char page[5];
+        bzero(page, 5);
+        sprintf(page, "%u", state.current_page);
+        strcat(payload, page);
+        http_post("http://192.168.1.105:8000/device/get_page/", payload);
+        free(payload);
+        free(image.data);
+        return;
+    }
+    //ESP_LOGI("HTTP CB", "page type not in response");
 }
+
+
 void http_error_event_callback(){
     connected_server = false;
+}
+
+void http_end_event_callback(){
+    if (is_text_response){
+        print_line_deinit();
+        edp4in2bV2DisplayFrame();
+    }
+    if(is_image_response){
+        print_part_of_image_deinit();
+        edp4in2bV2DisplayFrame();
+        ESP_LOGW("HTTP CB", "printing image");
+    }
+    is_text_response = false;
+    is_image_response = false;
 }
 
 void print_config() {
@@ -125,24 +342,26 @@ void dump_state_to_spiffs() {
     spiffs_deinit();
 }
 
+
 void init_gpio() {
     gpio_config_t io_conf;
-    io_conf.intr_type = GPIO_INTR_NEGEDGE;
+    io_conf.intr_type = GPIO_INTR_DISABLE;
     io_conf.mode = GPIO_MODE_INPUT;
     io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_2)|(1ULL<<GPIO_NUM_3);
     io_conf.pull_down_en = GPIO_PULLUP_ENABLE;
     io_conf.pull_up_en = GPIO_PULLDOWN_DISABLE;
     gpio_config(&io_conf);
+    //gpio_install_isr_service(0);
+    //gpio_isr_handler_add(GPIO_NUM_2, &gpio_isr_handler_nxt, (void *) GPIO_NUM_2);
+    //gpio_isr_handler_add(GPIO_NUM_3, &gpio_isr_handler_prv, (void *) GPIO_NUM_3);
 }
 
 void config_sleep() {
-    //gpio_install_isr_service();
-    //gpio_isr_handler_add(GPIO_NUM_16, &gpio_isr_handler, NULL);
     gpio_wakeup_enable(GPIO_NUM_2, GPIO_INTR_LOW_LEVEL);
     gpio_wakeup_enable(GPIO_NUM_3, GPIO_INTR_LOW_LEVEL);
-
     esp_sleep_enable_gpio_wakeup();
-    esp_sleep_enable_timer_wakeup(24*60*60*1000000); // 4294967295 ttl*1000000
+    //esp_sleep_enable_timer_wakeup(24*60*60*1000000); // 4294967295 ttl*1000000
+    esp_sleep_enable_timer_wakeup(3600*1000000); // 4294967295 ttl*1000000
 }
 
 void init_secuence() {
@@ -161,9 +380,14 @@ void init_secuence() {
     image.h = 24;
     image.w = 304;
     PainterClear(&image, UNCOLORED);
+    edp4in2bV2SetPartialWindowRed(image.data, 0, 40, image.w, image.h);
     PainterDrawStringAt(&image, 0, 0, "e-Printed Exam", &Font24, COLORED);
     edp4in2bV2SetPartialWindowBlack(image.data, 0, 40, image.w, image.h);
+#endif
+#ifdef DISPLAY_FRAME
     edp4in2bV2DisplayFrame();
+#endif
+#ifdef ENABLE_SCREEN
     free(image.data);
 #endif
 
@@ -277,8 +501,10 @@ void init_secuence() {
     PainterClear(&image, UNCOLORED);
     PainterDrawStringAt(&image, 0, 0, "waiting", &Font16, COLORED);
     edp4in2bV2SetPartialWindowBlack(image.data, 130, 150, image.w, image.h);
+    #endif
+    #ifdef DISPLAY_FRAME
     edp4in2bV2DisplayFrame();
-#endif
+    #endif
     //while(true)vTaskDelay(5000 / portTICK_PERIOD_MS);
 
     char* payload = (char*)malloc(256);
@@ -311,6 +537,8 @@ void init_secuence() {
         edp4in2bV2SetPartialWindowBlack(image.data, 130, 150, image.w, image.h);
         PainterDrawStringAt(&image, 0, 0, "FAILED", &Font16, COLORED);
         edp4in2bV2SetPartialWindowRed(image.data, 130, 150, image.w, image.h);
+#endif
+#ifdef DISPLAY_FRAME
         edp4in2bV2DisplayFrame();
 #endif
         while (!autenticated) {
@@ -327,57 +555,81 @@ void init_secuence() {
     edp4in2bV2SetPartialWindowRed(image.data, 130, 150, image.w, image.h);
     PainterDrawStringAt(&image, 0, 0, "ok", &Font16, COLORED);
     edp4in2bV2SetPartialWindowBlack(image.data, 130, 150, image.w, image.h);
+#endif
+#ifdef DISPLAY_FRAME
     edp4in2bV2DisplayFrame();
 #endif
     free(image.data);
     free(payload);
 }
 
-void gpio_isr_handler(){
-    ESP_LOGE("ISR", "ISR!");
-}
-
 void app_main() {
     connected_wifi = false;
-    load_state_from_spiffs();
+    //load_state_from_spiffs();
     image.rot = ROTATE_0;
     image.inv = 1;
-    if (state.token[0] == '\0'){
-        init_secuence();
-        dump_state_to_spiffs();
-    }else{
-        wifi_init_sta(SSID, PSK);
-        init_gpio();
-        if (gpio_get_level(GPIO_NUM_3) == 0) {
-            ESP_LOGW("MAIN", "DELETING CONFIG FILE AND RESTARTING SYSTEM");
-            spiffs_delete_file("/spiffs/config.bin");
-            esp_restart();
-        }
-        //config_sleep();
-        edp4in2bV2Init();
-        edp4in2bV2ClearFrame();
-    }  
-    image.data = (unsigned char*) malloc(323);
+    init_gpio();
+    init_secuence();
+    config_sleep();
     if (image.data == NULL){
         ESP_LOGE("MAIN", "COULD NOT ALLOCATE MEMORY");
         esp_restart();
     }
-    image.h = 16;
-    image.w = 120;
-    PainterClear(&image, UNCOLORED);
-    PainterDrawStringAt(&image, 0, 0, "wait", &Font16, COLORED);
-    edp4in2bV2SetPartialWindowBlack(image.data, 0, 0, image.w, image.h);
-    edp4in2bV2DisplayFrame();
-    while (!connected_wifi) vTaskDelay(1000 / portTICK_PERIOD_MS);    // configure the sleep mode
-    http_get("http://192.168.1.105:8000/device/ack/");
-    PainterClear(&image, UNCOLORED);
-    PainterDrawStringAt(&image, 0, 0, "OK!", &Font16, COLORED);
-    edp4in2bV2SetPartialWindowBlack(image.data, 0, 0, image.w, image.h);
-    edp4in2bV2SendCommand(DISPLAY_REFRESH); // send display refresh and do not wait for end of bussy
-    epdIfDelayMs(100);
-    wifi_stop();
+    int nxt = 0, prv = 0;
+    state.current_page = 1;
+    while (true){
+        image.data = (unsigned char*) malloc(323);
+        image.h = 16;
+        image.w = 120;
+        PainterClear(&image, UNCOLORED);
+        edp4in2bV2SetPartialWindowRed(image.data, 0, 0, image.w, image.h);
+        PainterDrawStringAt(&image, 0, 0, "wait", &Font16, COLORED);
+        edp4in2bV2SetPartialWindowBlack(image.data, 0, 0, image.w, image.h);
+        //edp4in2bV2DisplayFrame();
+        free(image.data);
+        while (!connected_wifi) vTaskDelay(1000 / portTICK_PERIOD_MS);    // configure the sleep mode
+        char* payload = (char*)malloc(256);
+        if (payload == NULL){
+            ESP_LOGE("MAIN", "COULD NOT ALLOCATE MEMORY");
+            esp_restart();
+        }
+        if (nxt)
+            state.current_page++;
+        if (prv)
+            state.current_page--;
+        bzero(payload, 256);
+        strcpy(payload, "secret=");
+        strcat(payload, SERVER_SECRET);
+        strcat(payload, "&uuid=");
+        strcat(payload, state.uuid);
+        strcat(payload, "&token=");
+        strcat(payload, state.token);
+        strcat(payload, "&page=");
+        char page[5];
+        bzero(page, 5);
+        sprintf(page, "%u", state.current_page);
+        strcat(payload, page);
+        http_post("http://192.168.1.105:8000/device/get_page/", payload);
+        free(payload);
+        wifi_stop();
+        edp4in2bV2Deinit();
+        connected_wifi = false;
+        //esp_deep_sleep(30*1000000);
+        ESP_LOGE("LOOP", "sleep!");
+        esp_light_sleep_start();
+        ESP_LOGE("LOOP", "wake up!");
+        init_gpio();
+        prv = !gpio_get_level(GPIO_NUM_2);
+        nxt = !gpio_get_level(GPIO_NUM_3);
+        if (prv) ESP_LOGE("LOOP", "prv is active");
+        if (nxt) ESP_LOGE("LOOP", "nxt is active");;
+        wifi_start();
+        ESP_LOGE("LOOP", "wifi started");;
+        config_sleep();
+        ESP_LOGE("LOOP", "config sleep started");;
+        edp4in2bV2Init();
+        ESP_LOGE("LOOP", "display started");
+    }
+
     free(image.data);
-    esp_deep_sleep(30*1000000);
-    //esp_light_sleep_start();
-    //vTaskDelay(5000 / portTICK_PERIOD_MS);
 }

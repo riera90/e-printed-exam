@@ -39,13 +39,7 @@ def save_image_half(page):
     if not page.binary_image:
         return
     image = Image.frombytes('L', (page.w, page.h), page.binary_image)
-    if image.size[0] != 200:
-        index = 200.0 / float(image.size[0])
-        image = image.resize((200, int(image.size[1] * index)))
-    if image.size[1] != 150:
-        index = 150.0 / float(image.size[1])
-        if index < 1:
-            image = image.resize((int(image.size[0] * index), 150))
+    image = image.resize((200, 150))
     image.save("media/snd/"+str(page.id)+"_half.jpg")
     #image.show()
     rm_thd = Thread(target=remove_file, args=("./media/snd/"+str(page.id)+"_half.jpg", 5, ))
@@ -55,6 +49,7 @@ def save_image(page):
     if not page.binary_image:
         return
     image = Image.frombytes('L', (page.w, page.h), page.binary_image)
+    image = image.resize((400, 300))
     image.save("media/snd/"+str(page.id)+".jpg")
     #image.show()
     rm_thd = Thread(target=remove_file, args=("./media/snd/"+str(page.id)+".jpg", 5, ))
@@ -91,13 +86,20 @@ def document_page_update(request, id, page_order):
                 index = 300.0 / float(image.size[1])
                 if index < 1:
                     image = image.resize((int(image.size[0] * index), 300))
+            img_w, img_h = image.size
+            background = Image.new('RGBA', (400, 300), (255, 255, 255, 255))
+            bg_w, bg_h = background.size
+            offset = ((bg_w - img_w) // 2, (bg_h - img_h) // 2)
+            background.paste(image, offset)
+            image = background
             bwimage = image.convert("L")
             bwimage = bwimage.point(lambda p: 255 if p > threshold else 0)
-            #bwimage.show()
+            bwimage.show()
             page.binary_image = bwimage.tobytes()
             page.w = bwimage.size[0]
             page.h = bwimage.size[1]
             page.save()
+            background.close()
             image.close()
             bwimage.close()
             os.system("rm -rf ./media/rcv/"+str(page.id)+".jpg")
