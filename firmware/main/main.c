@@ -347,7 +347,7 @@ void init_gpio() {
     gpio_config_t io_conf;
     io_conf.intr_type = GPIO_INTR_DISABLE;
     io_conf.mode = GPIO_MODE_INPUT;
-    io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_2)|(1ULL<<GPIO_NUM_3);
+    io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_4)|(1ULL<<GPIO_NUM_12);
     io_conf.pull_down_en = GPIO_PULLUP_ENABLE;
     io_conf.pull_up_en = GPIO_PULLDOWN_DISABLE;
     gpio_config(&io_conf);
@@ -619,8 +619,8 @@ void app_main() {
         esp_light_sleep_start();
         ESP_LOGE("LOOP", "wake up!");
         init_gpio();
-        prv = !gpio_get_level(GPIO_NUM_2);
-        nxt = !gpio_get_level(GPIO_NUM_3);
+        prv = !gpio_get_level(GPIO_NUM_4);
+        nxt = !gpio_get_level(GPIO_NUM_12);
         if (prv) ESP_LOGE("LOOP", "prv is active");
         if (nxt) ESP_LOGE("LOOP", "nxt is active");;
         wifi_start();
