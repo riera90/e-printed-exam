@@ -563,6 +563,7 @@ void init_secuence() {
     free(payload);
 }
 
+
 void app_main() {
     connected_wifi = false;
     //load_state_from_spiffs();
