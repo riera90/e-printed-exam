@@ -22,7 +22,7 @@ uint32_t epdIfDigitalRead(int pin) {
 int epdIfDelayMs(unsigned int delaytime) {
     int aux = 0;
     if (delaytime < 20){
-        int target = delaytime*28000;
+        int target = delaytime*29000;
         for (size_t i = 0; i < target; i++)
             aux += i;
         return aux;

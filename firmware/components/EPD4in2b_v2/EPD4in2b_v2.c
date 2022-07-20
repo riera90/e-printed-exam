@@ -31,6 +31,8 @@ int edp4in2bV2Deinit(void) {
  */
 void edp4in2bV2SendCommand(uint32_t command) {
     epdIfDigitalWrite(DC_PIN, LOW);
+    epdIfDelayMs(0);
+    epdIfDelayMs(0);
     epdIfSpiTransfer(command, 8);
     epdIfDelayMs(0);
     epdIfDelayMs(0);
@@ -41,6 +43,8 @@ void edp4in2bV2SendCommand(uint32_t command) {
  */
 void edp4in2bV2SendData(uint32_t data) {
     epdIfDigitalWrite(DC_PIN, HIGH);
+    epdIfDelayMs(0);
+    epdIfDelayMs(0);
     epdIfSpiTransfer(data, 8);
     epdIfDelayMs(0);
     epdIfDelayMs(0);

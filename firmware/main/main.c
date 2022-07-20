@@ -31,7 +31,7 @@
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<GPIO_INPUT_IO_0) | (1ULL<<GPIO_INPUT_IO_1))
 
 #define ENABLE_SCREEN
-//#define DISPLAY_FRAME
+#define DISPLAY_FRAME
 
 bool connected_wifi = false;
 bool connected_server = false;
@@ -368,6 +368,7 @@ void init_secuence() {
 #ifdef ENABLE_SCREEN
     edp4in2bV2Init();
     edp4in2bV2ClearFrame();
+    edp4in2bV2DisplayFrame();
 
     image.rot = ROTATE_0;
     image.inv = 1;
@@ -565,11 +566,26 @@ void init_secuence() {
 
 
 void app_main() {
+    //init_gpio();
+    edp4in2bV2Init();
+    epdIfDigitalWrite(DC_PIN, HIGH);
+    epdIfDelayMs(50);
+    epdIfDigitalWrite(DC_PIN, LOW);
+    epdIfDelayMs(50);
+    epdIfDigitalWrite(DC_PIN, HIGH);
+    epdIfDelayMs(50);
+    epdIfDigitalWrite(DC_PIN, LOW);
+    edp4in2bV2ClearFrame();
+    edp4in2bV2DisplayFrame();
+    while (true){
+        epdIfDelayMs(200);
+    };
+    /*
     connected_wifi = false;
     //load_state_from_spiffs();
     image.rot = ROTATE_0;
     image.inv = 1;
-    init_gpio();
+    //init_gpio();
     init_secuence();
     config_sleep();
     if (image.data == NULL){
@@ -632,5 +648,5 @@ void app_main() {
         ESP_LOGE("LOOP", "display started");
     }
 
-    free(image.data);
+    free(image.data);*/
 }
