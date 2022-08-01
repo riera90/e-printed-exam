@@ -1,5 +1,0 @@
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_SRCS "web_client.c")
-
-register_component()

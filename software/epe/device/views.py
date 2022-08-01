@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 
 from PIL import Image
@@ -21,7 +22,7 @@ from epe.secrets import server_secret
 def list(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    devices = Device.objects.all()
+    devices = Device.objects.all().filter(token__isnull=False)
     return render(request, 'device_list.html', {'devices': devices})
 
 def detail(request, id):
@@ -78,7 +79,7 @@ def delete(request, id):
     device = Device.objects.get(uuid=id)
     device.delete()
     devices = Device.objects.all()
-    return render(request, 'device_list.html', {'devices': devices, 'info': "Dispositivo " + device.name + " borrado"})
+    return render(request, 'device_list.html', {'devices': devices, 'info': "Dispositivo " + str(device.name) + " borrado"})
 
 
 def web_api_search_device(request):
@@ -121,8 +122,11 @@ def device_api_acknowledgment_device(request):
     except Device.DoesNotExist:
         device = Device(uuid=uuid, vendor=vendor, last_seen=timezone.now(), ttl=ttl)
         device.save()
-
-    return HttpResponse(json.dumps({"ttl": ttl, "token": device.token}), content_type="application/json")
+    document_pages = 0
+    documents = device.classroom.documents.all().filter(start__lt=datetime.datetime.now(), end__gt=datetime.datetime.now())
+    if documents and len(documents) > 0:
+        document_pages = documents[0].pages.all().count()
+    return HttpResponse(json.dumps({"ttl": str(ttl), "token": device.token, "document_pages": str(document_pages)}), content_type="application/json")
 
 @csrf_exempt
 def device_api_get_page(request):
@@ -159,12 +163,12 @@ def device_api_get_page(request):
     if page.type == "I":
         image = Image.frombytes('L', (page.w, page.h), page.binary_image)
         image_bits = ""
-        for y in range(300):
-            for x in range(400):
+        for y in range(page.h):
+            for x in range(page.w):
                 if image.getpixel((x,y)):
                     image_bits+='1'
                 else:
                     image_bits+='0'
-
+        print(len(image_bits))
         return HttpResponse(json.dumps({"type": page.type, "data": image_bits}), content_type="application/json")
     return HttpResponse(json.dumps({"type": page.type, "title": page.title, "body": page.body+"\r\n"}), content_type="application/json")

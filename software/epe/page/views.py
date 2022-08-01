@@ -94,7 +94,7 @@ def document_page_update(request, id, page_order):
             image = background
             bwimage = image.convert("L")
             bwimage = bwimage.point(lambda p: 255 if p > threshold else 0)
-            bwimage.show()
+            #bwimage.show()
             page.binary_image = bwimage.tobytes()
             page.w = bwimage.size[0]
             page.h = bwimage.size[1]
