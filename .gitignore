@@ -1,1 +1,12 @@
 .vscode
+.idea
+cmake-build-debug-system
+*.log
+*.aux
+*.out
+*.run.xml
+*.toc
+*.dvi
+*.lof
+*.bcf
+_minted-main
