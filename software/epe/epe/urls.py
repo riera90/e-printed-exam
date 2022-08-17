@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf.urls.static import static
-from django.contrib import admin
+from django.contrib import *
 from django.urls import path, include
+
+import epe.views
 from .views import *
 
 
@@ -29,3 +31,7 @@ urlpatterns = [
     path('document/', include('document.urls')),
     path('device/', include('device.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler403 = 'epe.views.error403'
+handler404 = 'epe.views.error404'
+handler500 = 'epe.views.error500'

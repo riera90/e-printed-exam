@@ -15,7 +15,12 @@ from threading import Thread
 def document_page_list(request, id):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    document = Document.objects.get(id=id)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para ver las páginas de este documento'})
     pages = document.pages.order_by('order').all()
     pages_lines=[]
     for page in pages:
@@ -58,8 +63,16 @@ def save_image(page):
 def document_page_update(request, id, page_order):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    document = Document.objects.get(id=id)
-    page = document.pages.get(order=page_order)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para modificar las páginas de este documento'})
+    try:
+        page = document.pages.get(order=page_order)
+    except Page.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'Lá página del documento no existe'})
     if request.POST:
         if request.POST.get('type') and request.POST['type'] != page.type:
             page.type = request.POST['type']
@@ -117,7 +130,12 @@ def document_page_update(request, id, page_order):
     return render(request, 'document_page_update.html', {'page': page, 'body_lines': page.body.splitlines(), 'document': document, 'types': Types})
 
 def document_page_create(request, id):
-    document = Document.objects.get(id=id)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para crear páginas en este documento'})
     if document.pages.all().exists():
         page = Page(
             document=document,
@@ -132,19 +150,36 @@ def document_page_create(request, id):
     return redirect("/document/"+str(document.id)+"/page/"+str(page.order))
 
 def document_page_down(request, id, page_order):
-    document = Document.objects.get(id=id)
-    page = document.pages.all().get(order=page_order)
-    page_2 = document.pages.all().get(order=page_order+1)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para modificar las páginas de este documento'})
+    try:
+        page = document.pages.all().get(order=page_order)
+        page_2 = document.pages.all().get(order=page_order+1)
+    except Page.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El cambio de orden en las páginas no es válido'})
     page.order = page.order + 1
     page_2.order = page_2.order - 1
     page.save()
     page_2.save()
     return redirect("/document/"+str(document.id)+"/page/")
 
+
 def document_page_up(request, id, page_order):
-    document = Document.objects.get(id=id)
-    page = document.pages.all().get(order=page_order)
-    page_2 = document.pages.all().get(order=page_order - 1)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para modificar las páginas de este documento'})
+    try:
+        page = document.pages.all().get(order=page_order)
+        page_2 = document.pages.all().get(order=page_order - 1)
+    except Page.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El cambio de orden en las páginas no es válido'})
     page.order = page.order - 1
     page_2.order = page_2.order + 1
     page.save()
@@ -152,8 +187,16 @@ def document_page_up(request, id, page_order):
     return redirect("/document/" + str(document.id) + "/page/")
 
 def document_page_delete(request, id, page_order):
-    document = Document.objects.get(id=id)
-    target_page = document.pages.all().get(order=page_order)
+    try:
+        document = Document.objects.get(id=id)
+    except Document.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'El documento no existe'})
+    if not request.user.is_staff and request.user.id is not document.owner_id:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para modificar las páginas de este documento'})
+    try:
+        target_page = document.pages.all().get(order=page_order)
+    except Page.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'Lá página a borrar no existe'})
     pages = document.pages.all()
     for page in pages:
         if page.order > target_page.order:

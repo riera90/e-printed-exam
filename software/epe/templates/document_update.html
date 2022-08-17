@@ -30,10 +30,25 @@
                   <label for="classroom">Aula asignada</label>
                   <select class="form-select" id="classroom" name="classroom">
                     {% for classroom in classrooms %}
-                      <option {% if classroom.code == device.classroom.code %}selected{% endif %} value="{{ classroom.code }}" id="{{ classroom.code }}" name="{{ classroom.code }}">{{ classroom.name }}</option>
+                      <option {% if classroom.code == document.classroom.code %}selected{% endif %} value="{{ classroom.code }}" id="{{ classroom.code }}" name="{{ classroom.code }}">{{ classroom.name }}</option>
                     {% endfor %}
                   </select>
               </div>
+              <div class="form-group mb-3">
+                  <label for="owner">Dueño</label>
+                  <select {% if not user.is_staff %}disabled {% endif %}class="form-select" id="owner" name="owner">
+                    {% for user_ in users %}
+                      <option {% if document.owner.id == user_.id %}selected{% endif %} value="{{ user_.id }}" id="{{ user_.id }}" name="{{ user_.id }}">{{ user_.username }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+                {% if not user.is_staff %}
+                    <select hidden class="form-select" id="owner" name="owner">
+                    {% for user_ in users %}
+                      <option {% if user.id == user_.id %}selected{% endif %} value="{{ user_.id }}" id="{{ user_.id }}" name="{{ user_.id }}">{{ user_.username }}</option>
+                    {% endfor %}
+                  </select>
+                {% endif %}
               <div class="form-group mb-3">
                   <label for="subject_code">Código de la asugnatura</label>
                   <input class="form-control" id="subject_code" name="subject_code" placeholder="Código de la signatura" value="{{ document.subject_code }}">

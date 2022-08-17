@@ -19,6 +19,8 @@
                         {{ document.name }}, {{ document.description }}
                         <div class="flex-row">
                             <span class="badge bg-primary rounded-pill">{{ document.pages.count }} páginas</span>
+                            <span class="badge bg-secondary rounded-pill">{{ document.classroom.name }}</span>
+                            <span class="badge bg-dark rounded-pill">{{ document.start }}</span>
                         </div>
                     </a>
                 {% endfor %}

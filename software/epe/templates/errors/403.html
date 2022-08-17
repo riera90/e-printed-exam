@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section id="main-content">
+        <div class="container">
+            {% include "warnings.html" %}
+            <p>Error 403 Forbidden</p>
+            <button type="button" class="btn btn-primary mb-3" onclick="window.history.back()">Volver</button>
+        </div>
+    </section>
+{% endblock %}

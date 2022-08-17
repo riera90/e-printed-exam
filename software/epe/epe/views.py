@@ -1,15 +1,31 @@
+import datetime
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 
+from document.models import Document
 from epe import settings
 
 
 def index(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    return render(request, 'index.html', {})
+    if request.user.is_staff:
+        documents_next = Document.objects.filter(start__gt=datetime.datetime.now())
+    else:
+        documents_next = []
+        for classroom in request.user.classrooms.all():
+            documents_next += classroom.documents.filter(start__gt=datetime.datetime.now(), owner=request.user)
+    if request.user.is_staff:
+        documents_current = Document.objects.filter(start__lt=datetime.datetime.now(), end__gt=datetime.datetime.now())
+    else:
+        documents_current = []
+        for classroom in request.user.classrooms.all():
+            documents_current += classroom.documents.filter(start__lt=datetime.datetime.now(), end__gt=datetime.datetime.now(), owner=request.user)
+    return render(request, 'index.html', {'documents_next': documents_next, 'documents_current': documents_current})
 
 def login_handler(request):
     logout(request)
@@ -35,3 +51,15 @@ def login_handler(request):
 def logout_handler(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+def error403(request, exception=None):
+    return HttpResponseForbidden(render_to_string('errors/403.html', {}))
+
+
+def error404(request, exception=None):
+    return HttpResponseNotFound(render_to_string('errors/404.html', {}))
+
+
+def error500(request, exception=None):
+    return HttpResponseServerError(render_to_string('errors/500.html', {}))

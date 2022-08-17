@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Document(models.Model):
     def __str__(self):
@@ -10,4 +12,5 @@ class Document(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     classroom = models.ForeignKey('classroom.Classroom', related_name='documents', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name='documents', on_delete=models.CASCADE)
 

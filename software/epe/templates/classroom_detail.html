@@ -31,7 +31,7 @@
                 </div>
               </li>
             </ul>
-
+            <hr>
             <div>
                 <span class="h1 m-3">Dispositivos</span>
                 <a href=/device/create>
@@ -43,7 +43,24 @@
                             ({{ device.uuid }}) {{ device.name }}
                             <div class="flex-row">
                                 <span class="badge bg-primary rounded-pill">{{ device.classroom.name }}</span>
-                                <span class="badge bg-secondary rounded-pill">test2</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <span class="h1 m-3">Documentos</span>
+                <a href=/document/create>
+                    <button type="button" class="btn btn-primary mb-3">Crear Nuevo Documento</button>
+                </a>
+                <ul class="list-group">
+                    {% for document in documents %}
+                        <a href="/document/{{ document.id }}" class="list-group-item d-flex justify-content-between align-items-center">
+                            ({{ document.name }}) {{ document.description }}
+                            <div class="flex-row">
+                                <span class="badge bg-primary rounded-pill">{{ document.pages.count }} páginas</span>
+                                <span class="badge bg-secondary rounded-pill">{{ document.start }}</span>
                             </div>
                         </a>
                     {% endfor %}

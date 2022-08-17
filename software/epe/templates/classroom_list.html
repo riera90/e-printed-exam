@@ -19,7 +19,7 @@
                         ({{ classroom.code }}) {{ classroom.name }}
                         <div class="flex-row">
                             <span class="badge bg-primary rounded-pill">{% if classroom.devices.count == 0 %}no hay dispositivos{% endif %}{% if classroom.devices.count == 1 %}1 dispositivo{% endif %}{% if classroom.devices.count > 1 %}{{ classroom.devices.count }} dispositivos{% endif %}</span>
-                            <span class="badge bg-secondary rounded-pill">test2</span>
+                            <span class="badge bg-secondary rounded-pill">{% if classroom.documents.count == 0 %}no hay documentos{% endif %}{% if classroom.documents.count == 1 %}1 documento{% endif %}{% if classroom.documents.count > 1 %}{{ classroom.documents.count }} documentos{% endif %}</span>
                         </div>
                     </a>
                 {% endfor %}

@@ -19,21 +19,36 @@ from epe.utils import *
 from rest_framework.views import APIView
 from epe.secrets import server_secret
 
+
 def list(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    devices = Device.objects.all().filter(token__isnull=False)
+    if request.user.is_staff:
+        devices = Device.objects.all().filter(token__isnull=False)
+    else:
+        devices = []
+        for classroom in request.user.classrooms.all():
+            devices += classroom.devices.all()
     return render(request, 'device_list.html', {'devices': devices})
+
 
 def detail(request, id):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
-    device = Device.objects.get(uuid=id)
+    try:
+        device = Device.objects.get(uuid=id)
+    except Device.DoesNotExist:
+        return render(request, 'errors/404.html', {'error': 'Este dispositivo no existe'})
+    if not request.user.is_staff and not request.user in device.classroom.teachers.all():
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para ver este dispositivo'})
     return render(request, 'device_detail.html', {'device': device})
+
 
 def create(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
+    if not request.user.is_staff:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para crear dispositivos'})
     if request.POST:
         if not request.POST.get('uuid'):
             return render(request, 'device_create.html', {"error": "El dispositivo selecionado no consta en la base de datos"})
@@ -57,10 +72,11 @@ def create(request):
 def update(request, id):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
+    if not request.user.is_staff:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para modificar dispositivos'})
     device = Device.objects.get(uuid=id)
     classrooms = Classroom.objects.all()
     if request.POST:
-        print(request.POST)
         name = request.POST['name']
         classroom_id = request.POST['classroom']
         if not name:
@@ -73,9 +89,12 @@ def update(request, id):
         return render(request, 'device_detail.html', {'device': device, 'classrooms': classrooms, 'info': "Dispositivo " + device.name + " actualizado correctamente"})
     return render(request, 'device_update.html', {'device': device, 'classrooms': classrooms})
 
+
 def delete(request, id):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_REDIRECT_URL, request.path))
+    if not request.user.is_staff:
+        return render(request, 'errors/403.html', {'error': 'Usted no está acreditado para borrar dispositivos'})
     device = Device.objects.get(uuid=id)
     device.delete()
     devices = Device.objects.all()
@@ -83,7 +102,7 @@ def delete(request, id):
 
 
 def web_api_search_device(request):
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated or not request.user.is_staff:
         return HttpResponse(json.dumps({"error": "auth error"}), content_type="application/json")
     devices = Device.objects.filter(classroom__isnull=True)
     devices_json = []
@@ -92,15 +111,14 @@ def web_api_search_device(request):
     response = {"devices": devices_json}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+
 @csrf_exempt
 def device_api_acknowledgment_device(request):
     ttl = 3600
-    print(request.POST)
     if not request.method == "POST":
         return HttpResponse(json.dumps({"error": "only post requests"}), content_type="application/json")
     if not request.POST.get('secret'):
         return HttpResponse(json.dumps({"error": "only requests with secret attribute"}), content_type="application/json")
-    print(request.POST['secret'])
     if request.POST['secret'] != server_secret:
         return HttpResponse(json.dumps({"error": "auth error"}), content_type="application/json")
     if not request.POST.get('uuid'):
@@ -128,9 +146,9 @@ def device_api_acknowledgment_device(request):
         document_pages = documents[0].pages.all().count()
     return HttpResponse(json.dumps({"ttl": str(ttl), "token": device.token, "document_pages": str(document_pages)}), content_type="application/json")
 
+
 @csrf_exempt
 def device_api_get_page(request):
-    print(request.POST)
     if not request.method == "POST":
         return HttpResponse(json.dumps({"error": "only post requests"}), content_type="application/json")
     if not request.POST.get('secret'):
@@ -169,6 +187,5 @@ def device_api_get_page(request):
                     image_bits+='1'
                 else:
                     image_bits+='0'
-        print(len(image_bits))
         return HttpResponse(json.dumps({"type": page.type, "data": image_bits}), content_type="application/json")
     return HttpResponse(json.dumps({"type": page.type, "title": page.title, "body": page.body+"\r\n"}), content_type="application/json")

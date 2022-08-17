@@ -30,10 +30,24 @@
                   </select>
               </div>
               <div class="form-group mb-3">
-                  <label for="subject_code">Código de la asugnatura</label>
+                  <label for="subject_code">Código de la asignatura</label>
                   <input class="form-control" id="subject_code" name="subject_code" placeholder="Código de la signatura" value="{{ document.subject_code }}">
               </div>
-
+              <div class="form-group mb-3">
+                  <label for="owner">Dueño</label>
+                  <select {% if not user.is_staff %}disabled {% endif %}class="form-select" id="owner" name="owner">
+                    {% for user_ in users %}
+                      <option {% if user.id == user_.id %}selected{% endif %} value="{{ user_.id }}" id="{{ user_.id }}" name="{{ user_.id }}">{{ user_.username }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+                {% if not user.is_staff %}
+                    <select hidden class="form-select" id="owner" name="owner">
+                    {% for user_ in users %}
+                      <option {% if user.id == user_.id %}selected{% endif %} value="{{ user_.id }}" id="{{ user_.id }}" name="{{ user_.id }}">{{ user_.username }}</option>
+                    {% endfor %}
+                  </select>
+                {% endif %}
               <div class="form-group mb-3">
                   <label for="start">Comienzo de la clase</label>
                   <input class="form-control" type="text" id="start" name="start" placeholder="HH:MM DD:MM:YYYY" value="{% if document.start.time.hour < 10 %}0{% endif %}{{ document.start.time.hour }}:{% if document.start.time.minute < 10 %}0{% endif %}{{ document.start.time.minute }} {% if document.start.date.day < 10 %}0{% endif %}{{ document.start.date.day }}/{% if document.start.date.month < 10 %}0{% endif %}{{ document.start.date.month }}/{{ document.start.date.year }}">
