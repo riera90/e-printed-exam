@@ -26,6 +26,12 @@
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
+                  <div class="fw-bold">Profesores</div>
+                    {% for teacher in classroom.teachers.all %}{{ teacher.username }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
                   <a class="btn btn-primary m-2" href=/classroom/{{ classroom.code }}/update role="button">Modificar</a>
                   <a class="btn btn-danger m-2" href=/classroom/{{ classroom.code }}/delete role="button">Borrar</a>
                 </div>

@@ -21,6 +21,14 @@
                   <label for="name">Nombre del aula</label>
                   <input class="form-control" id="name" name="name" placeholder="Nombre del aula" value="{{ classroom.name }}">
               </div>
+              <div class="form-group mb-3">
+                  <label for="classroom">Profesores</label>
+                  <select multiple class="form-select" id="teachers" name="teachers">
+                    {% for teacher in teachers %}
+                      <option {% if teacher in classroom.teachers.all %}selected{% endif %} value="{{ teacher.id }}" id="{{ teacher.id }}" name="{{ teacher.id }}">{{ teacher }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
               <button type="submit" class="btn btn-primary">Agregar</button>
             </form>
         </div>

@@ -1,5 +1,8 @@
 import http
+
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+
 from epe import settings
 from .models import Classroom
 from epe.utils import *
@@ -35,18 +38,19 @@ def create(request):
     if request.POST:
         code = request.POST['code']
         name = request.POST['name']
+        teachers = request.POST['teachers']
         classroom.code = code
         classroom.name = name
         if not code:
-            return render(request, 'classroom_create.html', {'classroom': classroom, 'error': "Código del aula no introducido"})
+            return render(request, 'classroom_create.html', {'classroom': classroom, 'teachers': User.objects.all(), 'error': "Código del aula no introducido"})
         if not name:
-            return render(request, 'classroom_create.html', {'classroom': classroom, 'error': "Nombre del aula no introducido"})
+            return render(request, 'classroom_create.html', {'classroom': classroom, 'teachers': User.objects.all(), 'error': "Nombre del aula no introducido"})
         if Classroom.objects.filter(code=code).exists():
-            return render(request, 'classroom_create.html', {'classroom': classroom, 'error': "Código del aula ya existe"})
+            return render(request, 'classroom_create.html', {'classroom': classroom, 'teachers': User.objects.all(), 'error': "Código del aula ya existe"})
         classroom.save()
         request.session['info'] = "Aula agregada"
         return render(request, "classroom_detail.html", {'classroom': classroom, 'info': "Aula agregada"})
-    return render(request, 'classroom_create.html')
+    return render(request, 'classroom_create.html', {'teachers': User.objects.all()})
 
 def update(request, id):
     if not request.user.is_authenticated:
@@ -56,12 +60,16 @@ def update(request, id):
     classroom = Classroom.objects.get(code=id)
     if request.POST:
         name = request.POST['name']
+        teachers = request.POST.getlist('teachers')
+        classroom.teachers.clear()
+        for teacher in teachers:
+            classroom.teachers.add(User.objects.get(id=teacher))
         if not name:
-            return render(request, 'classroom_update.html', {'classroom': classroom, 'error': "Nombre del aula no introducido"})
+            return render(request, 'classroom_update.html', {'classroom': classroom, 'teachers': User.objects.all(), 'error': "Nombre del aula no introducido"})
         classroom.name = name
         classroom.save()
-        return render(request, 'classroom_detail.html', {'classroom': classroom, 'info': "Aula " + classroom.name + " actualizada correctamente"})
-    return render(request, 'classroom_update.html', {'classroom': classroom})
+        return render(request, 'classroom_detail.html', {'classroom': classroom, 'teachers': User.objects.all(), 'info': "Aula " + classroom.name + " actualizada correctamente"})
+    return render(request, 'classroom_update.html', {'classroom': classroom, 'teachers': User.objects.all()})
 
 def delete(request, id):
     if not request.user.is_authenticated:
