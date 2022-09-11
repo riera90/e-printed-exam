@@ -1255,16 +1255,6 @@ F 3 "~" H 1300 1500 50  0001 C CNN
 	1    1300 1500
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1100 2100 650  2100
-Wire Wire Line
-	1300 2100 1100 2100
-Connection ~ 1100 2100
-Wire Wire Line
-	1100 2050 1100 2100
-Connection ~ 1100 1700
-Wire Wire Line
-	1100 1700 1100 1750
 $Comp
 L Transistor_FET:2N7002 Q8
 U 1 1 62F85C10
@@ -1546,4 +1536,6 @@ F 3 "~" H 2150 4900 50  0001 C CNN
 	1    2150 4900
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	650  2100 1300 2100
 $EndSCHEMATC

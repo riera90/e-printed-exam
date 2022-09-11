@@ -140,6 +140,8 @@ def device_api_acknowledgment_device(request):
     except Device.DoesNotExist:
         device = Device(uuid=uuid, vendor=vendor, last_seen=timezone.now(), ttl=ttl)
         device.save()
+    if not device.classroom:
+        return HttpResponse(json.dumps({"error": "auth error"}), content_type="application/json")
     document_pages = 0
     documents = device.classroom.documents.all().filter(start__lt=datetime.datetime.now(), end__gt=datetime.datetime.now())
     if documents and len(documents) > 0:

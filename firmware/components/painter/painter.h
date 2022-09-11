@@ -15,7 +15,7 @@
 
 struct Painting{
     unsigned char* data;
-    int w; // HAS!! to be a multiple of 8
+    int w; // MUST!! be a multiple of 8
     int h;
     int rot;
     unsigned char inv;

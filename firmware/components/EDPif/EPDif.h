@@ -4,12 +4,6 @@
 #include "driver/gpio.h"
 
 // SPI pin description
-
-/*#define RST_PIN         14
-#define DC_PIN          0
-#define CS_PIN          13
-#define BUSY_PIN        16*/
-
 #define RST_PIN         GPIO_NUM_5
 #define DC_PIN          GPIO_NUM_4
 #define BUSY_PIN        GPIO_NUM_0
@@ -31,4 +25,6 @@ void epdIfDigitalWrite(int pin, uint32_t value);
 uint32_t epdIfDigitalRead(int pin);
 int epdIfDelayMs(unsigned int delaytime);
 void epdIfSpiTransfer(uint32_t data, uint32_t bits);
+
 #endif
+

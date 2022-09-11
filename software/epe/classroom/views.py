@@ -38,7 +38,7 @@ def create(request):
     if request.POST:
         code = request.POST['code']
         name = request.POST['name']
-        teachers = request.POST['teachers']
+        teachers = request.POST.getlist('teachers')
         classroom.code = code
         classroom.name = name
         if not code:
@@ -48,6 +48,8 @@ def create(request):
         if Classroom.objects.filter(code=code).exists():
             return render(request, 'classroom_create.html', {'classroom': classroom, 'teachers': User.objects.all(), 'error': "Código del aula ya existe"})
         classroom.save()
+        for teacher in teachers:
+            classroom.teachers.add(User.objects.get(id=teacher))
         request.session['info'] = "Aula agregada"
         return render(request, "classroom_detail.html", {'classroom': classroom, 'info': "Aula agregada"})
     return render(request, 'classroom_create.html', {'teachers': User.objects.all()})

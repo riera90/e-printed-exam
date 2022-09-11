@@ -32,7 +32,6 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
-
 void wifi_post_ip_phase(); // to be defined by the user
 
 static esp_err_t wifi_event_handler(void *ctx, system_event_t *event);
@@ -44,7 +43,5 @@ void wifi_stop();
 void wifi_start();
 void wifi_restore();
 void wifi_deinit();
-
-
 
 #endif

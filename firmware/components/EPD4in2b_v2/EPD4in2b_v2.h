@@ -47,8 +47,6 @@
 #define READ_OTP                        0xA2
 #define POWER_SAVING                    0xE3
 
-
-
 #define WIDTH 400
 #define HEIGHT 300
 
@@ -65,6 +63,5 @@ void edp4in2bV2DisplayFramePart(const unsigned char* frame_black, const unsigned
 void edp4in2bV2DisplayFrame(void);
 void edp4in2bV2ClearFrame(void);
 void edp4in2bV2Sleep(void);
-
 
 #endif

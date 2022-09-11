@@ -118,12 +118,11 @@ int epdIfInit(void) {
     // ESP8266 Only support half-duplex
     spi_config.mode = SPI_MASTER_MODE;
     // Set the SPI clock frequency division factor
-    spi_config.clk_div = SPI_10MHz_DIV;
+    spi_config.clk_div = SPI_2MHz_DIV;
     spi_config.event_cb = NULL;
     spi_config.intr_enable.val = HSPI_HOST;
     spi_config.event_cb = NULL;
     spi_config.mode = SPI_MASTER_MODE;
-    spi_config.clk_div = SPI_2MHz_DIV;
     spi_config.interface.bit_tx_order = SPI_BIT_ORDER_LSB_FIRST;
     spi_config.interface.bit_rx_order = SPI_BIT_ORDER_LSB_FIRST;
     spi_config.interface.byte_tx_order = SPI_BYTE_ORDER_LSB_FIRST;
@@ -131,11 +130,6 @@ int epdIfInit(void) {
     spi_init(HSPI_HOST, &spi_config);
     ESP_LOGI("epdIfInit", "init spi succesfully");
 
-    /*pinMode(CS_PIN, OUTPUT);
-    pinMode(RST_PIN, OUTPUT);
-    pinMode(DC_PIN, OUTPUT);
-    pinMode(BUSY_PIN, INPUT); 
-    SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));*/
     return 0;
 }
 
